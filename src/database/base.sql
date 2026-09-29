@@ -30,6 +30,7 @@ CREATE TABLE `tb_usuarios` (
   `senha`      varchar(255) NOT NULL,
   `perfil_id`  int unsigned DEFAULT NULL,
   `status`     tinyint(1) DEFAULT NULL,
+  `version`    int unsigned NOT NULL DEFAULT 1,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -60,6 +61,7 @@ CREATE TABLE `tb_exemplo` (
   `titulo`      varchar(150) NOT NULL,
   `descricao`   varchar(500) DEFAULT NULL,
   `status`      tinyint(1) DEFAULT 1,
+  `version`     int unsigned NOT NULL DEFAULT 1,
   `created_at`  datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at`  datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Src\App\Infrastructure\Repositories;
 
 use PDO;
+use Src\App\Http\Exceptions\Exemplo\ExemploException;
 use Src\App\Infrastructure\IRepositories\IExemploRepository;
 use Src\App\Models\Exemplo;
 use Src\Core\Database;
@@ -39,33 +40,39 @@ class ExemploRepository implements IExemploRepository
     {
         $sql = 'UPDATE tb_exemplo
                 SET titulo = :titulo, descricao = :descricao,
-                    status = :status, updated_at = :updated_at
-                WHERE id = :id';
+                    status = :status, updated_at = :updated_at, version = version + 1
+                WHERE id = :id AND version = :expectedVersion';
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':titulo', $exemplo->getTitulo());
         $stmt->bindValue(':descricao', $exemplo->getDescricao());
         $stmt->bindValue(':status', $exemplo->getStatus(), PDO::PARAM_BOOL);
         $stmt->bindValue(':updated_at', $exemplo->getUpdatedAt());
         $stmt->bindValue(':id', $exemplo->getId(), PDO::PARAM_STR);
+        $stmt->bindValue(':expectedVersion', $exemplo->getVersion(), PDO::PARAM_INT);
         $stmt->execute();
+
+        if ($stmt->rowCount() === 0) {
+            throw ExemploException::conflitoDeEdicao();
+        }
 
         return $exemplo;
     }
 
     public function getAll(): array
     {
-        $sql = 'SELECT id, titulo, descricao, status FROM tb_exemplo ORDER BY id DESC';
+        $sql = 'SELECT id, titulo, descricao, status, version FROM tb_exemplo ORDER BY id DESC';
         $stmt = $this->conn->query($sql);
         $itens = [];
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $itens[] = new Exemplo(
-                $row['titulo'],
-                $row['descricao'],
-                (bool) $row['status'],
-                null,
-                null,
-                $row['id']
+                titulo: $row['titulo'],
+                descricao: $row['descricao'],
+                status: (bool) $row['status'],
+                created_at: null,
+                updated_at: null,
+                id: $row['id'],
+                version: (int) $row['version'],
             );
         }
 
@@ -82,12 +89,13 @@ class ExemploRepository implements IExemploRepository
 
         if ($row) {
             return new Exemplo(
-                $row['titulo'],
-                $row['descricao'],
-                (bool) $row['status'],
-                $row['created_at'],
-                $row['updated_at'],
-                $row['id']
+                titulo: $row['titulo'],
+                descricao: $row['descricao'],
+                status: (bool) $row['status'],
+                created_at: $row['created_at'],
+                updated_at: $row['updated_at'],
+                id: $row['id'],
+                version: (int) $row['version'],
             );
         }
 
@@ -99,7 +107,9 @@ class ExemploRepository implements IExemploRepository
         $sql = 'DELETE FROM tb_exemplo WHERE id = :id';
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_STR);
-        return $stmt->execute();
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
     }
 
     public function count(): int

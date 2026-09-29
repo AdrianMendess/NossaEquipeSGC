@@ -16,6 +16,7 @@ class EditUserFormRequest extends Request
             'senha' => ['nullable', 'string', 'min:8', 'max:150'],
             'perfil' => ['required', 'integer', 'in:1,2'],
             'status' => ['nullable', 'integer', 'in:0,1'],
+            'version' => ['required', 'integer'],
         ];
     }
 
@@ -39,6 +40,9 @@ class EditUserFormRequest extends Request
 
             'status.required' => 'O campo status é obrigatório.',
             'status.in' => 'O campo status deve ser "ativo" ou "inativo".',
+
+            'version.required' => 'Recarregue a página e tente novamente.',
+            'version.integer' => 'Recarregue a página e tente novamente.',
         ];
     }
 }

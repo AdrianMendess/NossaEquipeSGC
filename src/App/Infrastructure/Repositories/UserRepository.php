@@ -7,6 +7,7 @@ namespace Src\App\Infrastructure\Repositories;
 use PDO;
 use Src\App\Enums\Perfil;
 use Src\App\Enums\Status;
+use Src\App\Http\Exceptions\Usuario\UsuarioException;
 use Src\App\Infrastructure\IRepositories\IUserRepository;
 use Src\App\Models\User;
 use Src\App\ValueObjects\Senha;
@@ -40,8 +41,9 @@ class UserRepository implements IUserRepository
 
     public function updateUser(User $user): User
     {
-        $sql = 'UPDATE tb_usuarios SET nome = :name, email = :email, senha = :password, perfil_id = :perfil_id, 
-                        status = :status, updated_at = :updated_at WHERE id = :id';
+        $sql = 'UPDATE tb_usuarios SET nome = :name, email = :email, senha = :password, perfil_id = :perfil_id,
+                        status = :status, updated_at = :updated_at, version = version + 1
+                WHERE id = :id AND version = :expectedVersion';
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':name', $user->getNome());
         $stmt->bindValue(':email', $user->getEmail());
@@ -50,7 +52,12 @@ class UserRepository implements IUserRepository
         $stmt->bindValue(':perfil_id', $user->getPerfil()->value);
         $stmt->bindValue(':status', $user->getStatus()->value);
         $stmt->bindValue(':updated_at', (new \DateTimeImmutable())->format('Y-m-d H:i:s'));
+        $stmt->bindValue(':expectedVersion', $user->getVersion(), PDO::PARAM_INT);
         $stmt->execute();
+
+        if ($stmt->rowCount() === 0) {
+            throw UsuarioException::conflitoDeEdicao();
+        }
 
         return $user;
     }
@@ -60,7 +67,9 @@ class UserRepository implements IUserRepository
         $sql = 'DELETE FROM tb_usuarios WHERE id = :id';
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_STR);
-        return $stmt->execute();
+        $stmt->execute();
+        
+        return $stmt->rowCount() > 0;
     }
 
     public function getAllUser(): array
@@ -128,14 +137,15 @@ class UserRepository implements IUserRepository
             return null;
         }
         return new User(
-            $row['nome'],
-            $row['email'],
-            Senha::senhaHash($row['senha']),
-            Perfil::from($row['perfil_id']),
-            Status::from($row['status']),
-            new \DateTimeImmutable($row['created_at']),
-            $row['updated_at'] ? new \DateTimeImmutable($row['updated_at']) : null,
-            $row['id'],
+            nome: $row['nome'],
+            email: $row['email'],
+            senha: Senha::senhaHash($row['senha']),
+            perfil: Perfil::from($row['perfil_id']),
+            status: Status::from($row['status']),
+            createdAt: new \DateTimeImmutable($row['created_at']),
+            updatedAt: $row['updated_at'] ? new \DateTimeImmutable($row['updated_at']) : null,
+            id: $row['id'],
+            version: (int) $row['version'],
         );
     }
 }

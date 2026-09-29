@@ -15,6 +15,7 @@ class ExemploRequest extends Request
             'id'        => ['nullable', 'string'],
             'titulo'    => ['required', 'string', 'min:3', 'max:150'],
             'descricao' => ['nullable', 'string', 'max:500'],
+            'version'   => ['nullable', 'integer'],
         ];
     }
 

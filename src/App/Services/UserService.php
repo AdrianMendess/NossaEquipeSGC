@@ -10,6 +10,7 @@ use Src\App\Infrastructure\IRepositories\IUserRepository;
 use Src\App\Models\User;
 use Src\App\Services\IServices\IUserService;
 use Src\App\ValueObjects\Senha;
+use Src\Core\Transaction;
 
 class UserService implements IUserService
 {
@@ -34,7 +35,7 @@ class UserService implements IUserService
             'status' => Status::ATIVO->value,
         ]);
 
-        return $this->repository->createUser($user);
+        return Transaction::run(fn () => $this->repository->createUser($user));
     }
 
     public function deleteUser(string $id): void
@@ -42,7 +43,8 @@ class UserService implements IUserService
         if ($this->repository->getUserById($id) === null) {
             throw UsuarioException::naoEncontrado();
         }
-        $this->repository->deleteUser($id);
+
+        Transaction::run(fn () => $this->repository->deleteUser($id), 'Erro ao deletar o usuário.');
     }
 
     public function updateUser(string $id, array $data, ?string $usuarioLogadoId = null): User
@@ -68,9 +70,10 @@ class UserService implements IUserService
             'perfil' => $data['perfil'],
             'status' => $novoStatus->value,
             'created_at' => $existente->getCreatedAt(),
+            'version' => (int) $data['version'],
         ]);
 
-        return $this->repository->updateUser($user);
+        return Transaction::run(fn () => $this->repository->updateUser($user));
     }
 
     public function getUserById(string $id): User
@@ -104,7 +107,8 @@ class UserService implements IUserService
     {
         $user = $this->getUserById($id);
         $user->atualizaSenha(Senha::senha($novaSenha));
-        return $this->repository->updateUser($user);
+
+        return Transaction::run(fn () => $this->repository->updateUser($user));
     }
 
     public function redefinirSenha(string $email, string $novaSenha): void

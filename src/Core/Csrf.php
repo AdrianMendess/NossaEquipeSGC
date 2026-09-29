@@ -31,6 +31,5 @@ class Csrf
             Url::redirect('/');
         }
 
-        unset($_SESSION['csrf']);
     }
 }

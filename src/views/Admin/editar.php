@@ -42,6 +42,9 @@ $isProprioUsuario = $user !== null && ($_SESSION['user_id'] ?? null) === $user->
 
         <form method="POST" action="<?= $formAction ?>" class="grid grid-cols-1 gap-4 md:grid-cols-2">
             <?= csrf() ?>
+            <?php if (! $criando) : ?>
+                <input type="hidden" name="version" value="<?= $user?->getVersion() ?? 1 ?>">
+            <?php endif; ?>
 
             <div class="md:col-span-1">
                 <label for="nome" class="text-sm font-medium text-slate-700">Nome</label>

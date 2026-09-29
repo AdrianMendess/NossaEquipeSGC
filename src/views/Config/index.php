@@ -43,7 +43,7 @@ $urlAtualizarSenha = $urlAtualizarSenha ?? '';
                 <div class="mt-6 space-y-3">
                     <div class="rounded-2xl border border-slate-200 p-4">
                         <p class="text-sm font-medium text-slate-600">ID</p>
-                        <p class="mt-1 text-sm font-semibold text-slate-900">#<?= (int) $usuario->getId() ?></p>
+                        <p class="mt-1 text-sm font-semibold text-slate-900">#<?= (string) $usuario->getId() ?></p>
                     </div>
                     <div class="rounded-2xl border border-slate-200 p-4">
                         <p class="text-sm font-medium text-slate-600">Status</p>

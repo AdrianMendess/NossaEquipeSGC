@@ -20,6 +20,7 @@
         <form method="POST" action="<?= $urlSalvar ?>">
             <?= csrf() ?>
             <input type="hidden" name="id" value="<?= htmlspecialchars($item->getId()) ?>">
+            <input type="hidden" name="version" value="<?= $item->getVersion() ?>">
 
             <div class="space-y-4">
                 <div>

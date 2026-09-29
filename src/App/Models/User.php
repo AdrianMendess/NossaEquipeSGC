@@ -24,6 +24,7 @@ class User
 
     private ?DateTimeImmutable $createdAt = null;
     private ?DateTimeImmutable $updatedAt = null;
+    private int $version = 1;
 
     public function __construct(
         string $nome,
@@ -33,7 +34,8 @@ class User
         ?Status $status,
         ?DateTimeImmutable $createdAt = null,
         ?DateTimeImmutable $updatedAt = null,
-        ?string $id = null
+        ?string $id = null,
+        int $version = 1
     ) {
         $this->setId($id);
         $this->nome = $nome;
@@ -43,6 +45,7 @@ class User
         $this->status = $status ?? Status::ATIVO;
         $this->createdAt = $createdAt ?? new DateTimeImmutable();
         $this->updatedAt = $updatedAt ?? new DateTimeImmutable();
+        $this->version = $version;
     }
 
     public static function fromArray(array $data): self
@@ -52,14 +55,15 @@ class User
             : Senha::senha((string) $data['senha']);
 
         return new self(
-            $data['nome'],
-            $data['email'],
-            $senha,
-            isset($data['perfil']) ? Perfil::validar((int) $data['perfil']) : null,
-            isset($data['status']) ? Status::validar((int) $data['status']) : null,
-            $data['created_at'] ?? null,
-            $data['updated_at'] ?? null,
-            $data['id'] ?? null
+            nome: $data['nome'],
+            email: $data['email'],
+            senha: $senha,
+            perfil: isset($data['perfil']) ? Perfil::validar((int) $data['perfil']) : null,
+            status: isset($data['status']) ? Status::validar((int) $data['status']) : null,
+            createdAt: $data['created_at'] ?? null,
+            updatedAt: $data['updated_at'] ?? null,
+            id: $data['id'] ?? null,
+            version: isset($data['version']) ? (int) $data['version'] : 1,
         );
     }
 
@@ -111,6 +115,11 @@ class User
     public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function getVersion(): int
+    {
+        return $this->version;
     }
 
     public function setId(?string $id): void

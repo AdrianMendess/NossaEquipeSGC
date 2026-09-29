@@ -50,4 +50,10 @@ class UsuarioException extends DomainException
     {
         return new self($mensagem, HttpStatus::UNPROCESSABLE_ENTITY->value);
     }
+
+    public static function conflitoDeEdicao(
+        string $mensagem = 'Este usuário foi alterado por outra pessoa. Recarregue a página e tente novamente.'
+    ): self {
+        return new self($mensagem, HttpStatus::CONFLICT->value);
+    }
 }

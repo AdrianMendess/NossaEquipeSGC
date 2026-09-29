@@ -15,6 +15,7 @@ class Exemplo
     private ?bool $status;
     private ?string $created_at;
     private ?string $updated_at;
+    private int $version = 1;
 
     public function __construct(
         string $titulo,
@@ -22,7 +23,8 @@ class Exemplo
         ?bool $status = null,
         ?string $created_at = null,
         ?string $updated_at = null,
-        ?string $id = null
+        ?string $id = null,
+        int $version = 1
     ) {
         $this->setId($id);
         $this->titulo = $titulo;
@@ -30,17 +32,19 @@ class Exemplo
         $this->status = $status;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
+        $this->version = $version;
     }
 
     public static function fromArray(array $data): self
     {
         return new self(
-            $data['titulo'],
-            $data['descricao'] ?? null,
-            $data['status'] ?? null,
-            $data['created_at'] ?? null,
-            $data['updated_at'] ?? null,
-            $data['id'] ?? null
+            titulo: $data['titulo'],
+            descricao: $data['descricao'] ?? null,
+            status: $data['status'] ?? null,
+            created_at: $data['created_at'] ?? null,
+            updated_at: $data['updated_at'] ?? null,
+            id: $data['id'] ?? null,
+            version: isset($data['version']) ? (int) $data['version'] : 1,
         );
     }
 
@@ -102,5 +106,10 @@ class Exemplo
     public function setUpdatedAt(?string $updated_at): void
     {
         $this->updated_at = $updated_at;
+    }
+
+    public function getVersion(): int
+    {
+        return $this->version;
     }
 }

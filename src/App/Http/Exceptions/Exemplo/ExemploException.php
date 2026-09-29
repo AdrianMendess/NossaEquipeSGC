@@ -27,4 +27,9 @@ class ExemploException extends DomainException
     {
         return new self('Erro ao deletar registro.');
     }
+
+    public static function conflitoDeEdicao(): self
+    {
+        return new self('Este registro foi alterado por outra pessoa. Recarregue a página e tente novamente.');
+    }
 }

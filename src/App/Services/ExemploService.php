@@ -8,6 +8,7 @@ use Src\App\Http\Exceptions\Exemplo\ExemploException;
 use Src\App\Infrastructure\IRepositories\IExemploRepository;
 use Src\App\Models\Exemplo;
 use Src\App\Services\IServices\IExemploService;
+use Src\Core\Transaction;
 
 class ExemploService implements IExemploService
 {
@@ -28,7 +29,7 @@ class ExemploService implements IExemploService
             'updated_at' => $agora,
         ]);
 
-        return $this->repository->create($novo);
+        return Transaction::run(fn () => $this->repository->create($novo));
     }
 
     public function update(string $id, array $data): Exemplo
@@ -46,9 +47,10 @@ class ExemploService implements IExemploService
             'status' => $existente->getStatus(),
             'created_at' => $existente->getCreatedAt(),
             'updated_at' => date('Y-m-d H:i:s'),
+            'version' => isset($data['version']) ? (int) $data['version'] : $existente->getVersion(),
         ]);
 
-        return $this->repository->update($atualizado);
+        return Transaction::run(fn () => $this->repository->update($atualizado));
     }
 
     public function delete(string $id): bool
@@ -59,7 +61,7 @@ class ExemploService implements IExemploService
             throw ExemploException::naoEncontrado();
         }
 
-        return $this->repository->delete($id);
+        return Transaction::run(fn () => $this->repository->delete($id));
     }
 
     public function getAll(): array

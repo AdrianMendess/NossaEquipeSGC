@@ -31,7 +31,7 @@ $isLoginPage = is_string($bodyClass) && str_contains($bodyClass, 'login-page');
             {{content}}
         </main>
     <?php else : ?>
-        <div class="flex min-h-screen overflow-hidden">
+        <div class="flex h-screen overflow-hidden">
             <div id="sidebarBackdrop" class="fixed inset-0 z-40 hidden bg-slate-900/50 lg:hidden"></div>
             {{sidebar}}
 
