@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\App\Utils;
+namespace Src\App\Utils\EmailTemplates;
 
 class RecuperacaoSenhaEmailTemplate
 {

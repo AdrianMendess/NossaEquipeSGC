@@ -11,11 +11,8 @@ use Src\App\Infrastructure\IEmailSender;
 use Src\App\Infrastructure\IRepositories\IAuditoriaRepository;
 use Src\App\Infrastructure\Repositories\AuditoriaRepository;
 use Src\App\Services\AuditoriaService;
-use Src\App\Services\EmailService;
 use Src\App\Services\IServices\IAuditoriaService;
 use Src\App\Services\IServices\IAuthService;
-use Src\App\Services\IServices\IEmailService;
-use Src\App\Services\IServices\IUserService;
 use Src\Core\Container;
 use Src\Core\Database;
 use Src\Core\RateLimiting;
@@ -42,10 +39,6 @@ Container::set(LoginRateLimitingMiddleware::class, static function () {
 
 Container::set(IEmailSender::class, static function () {
     return new HttpEmailSender();
-});
-
-Container::set(IEmailService::class, static function () {
-    return new EmailService(Container::get(IUserService::class), Container::get(IEmailSender::class));
 });
 
 Container::set(IAuditoriaRepository::class, static function () {

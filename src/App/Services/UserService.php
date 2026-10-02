@@ -16,11 +16,9 @@ use Src\Core\Transaction;
 
 class UserService implements IUserService
 {
-    private IUserRepository $repository;
-
-    public function __construct(IUserRepository $repository)
-    {
-        $this->repository = $repository;
+    public function __construct(
+        private IUserRepository $repository
+    ) {
     }
 
     public function createUser(CriarUserDto $dto): User

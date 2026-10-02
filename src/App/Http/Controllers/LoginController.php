@@ -11,7 +11,7 @@ use Src\App\Http\Requests\RedefinirSenhaFormRequest;
 use Src\App\Http\Requests\VerificaCodigoFormRequest;
 use Src\App\Http\Requests\VerificarEmailFormRequest;
 use Src\App\Services\IServices\IAuthService;
-use Src\App\Services\IServices\IEmailService;
+use Src\App\Services\IServices\IRecuperacaoSenhaService;
 use Src\App\Services\IServices\IUserService;
 use Src\App\Utils\Toast;
 use Src\App\Utils\Url;
@@ -23,13 +23,16 @@ class LoginController extends SharedController
 {
     private IAuthService $authService;
     private IUserService $userService;
-    private IEmailService $emailService;
+    private IRecuperacaoSenhaService $recuperacaoSenhaService;
 
-    public function __construct(IAuthService $authService, IUserService $userService, IEmailService $emailService)
-    {
+    public function __construct(
+        IAuthService $authService,
+        IUserService $userService,
+        IRecuperacaoSenhaService $recuperacaoSenhaService
+    ) {
         $this->authService = $authService;
         $this->userService = $userService;
-        $this->emailService = $emailService;
+        $this->recuperacaoSenhaService = $recuperacaoSenhaService;
     }
 
     public function index(): string
@@ -107,7 +110,7 @@ class LoginController extends SharedController
         $email = $data['email'];
 
         try {
-            $this->emailService->solicitarCodigoRecuperacao($email);
+            $this->recuperacaoSenhaService->solicitarCodigoRecuperacao($email);
         } catch (UsuarioException) {
             Toast::error('Email não encontrado.');
             Url::redirect('/esqueci-senha');
@@ -143,7 +146,7 @@ class LoginController extends SharedController
         $email = $data['email'];
         $codigo = $data['codigo'];
 
-        if (! $this->emailService->verificarCodigo($email, $codigo)) {
+        if (! $this->recuperacaoSenhaService->verificarCodigo($email, $codigo)) {
             if (Auth::codigoExpirado()) {
                 Toast::error('Sessão expirada. Solicite um novo código.');
                 Url::redirect('/esqueci-senha');
@@ -167,7 +170,7 @@ class LoginController extends SharedController
             ]);
         }
 
-        $this->emailService->limparCodigo();
+        $this->recuperacaoSenhaService->limparCodigo();
         Auth::autorizarRedefinicao($email);
 
         $toast = Toast::pull();

@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Src\App\Services;
 
+use Src\App\Http\Exceptions\Usuario\UsuarioException;
 use Src\App\Infrastructure\IEmailSender;
-use Src\App\Services\IServices\IEmailService;
-use Src\App\Services\IServices\IUserService;
-use Src\App\Utils\RecuperacaoSenhaEmailTemplate;
+use Src\App\Infrastructure\IRepositories\IUserRepository;
+use Src\App\Services\IServices\IRecuperacaoSenhaService;
+use Src\App\Utils\EmailTemplates\RecuperacaoSenhaEmailTemplate;
 use Src\Core\Auth;
 
-class EmailService implements IEmailService
+class RecuperacaoSenhaService implements IRecuperacaoSenhaService
 {
     private const EXPIRACAO_MINUTOS = 5;
 
     public function __construct(
-        private IUserService $userService,
+        private IUserRepository $userRepository,
         private IEmailSender $sender
     ) {
     }
@@ -29,7 +30,10 @@ class EmailService implements IEmailService
             return;
         }
 
-        $this->userService->getUserByEmail($email);
+        if ($this->userRepository->getUserByEmail($email) === null) {
+            throw UsuarioException::naoEncontrado('Email não cadastrado.');
+        }
+
         $this->enviarCodigoRecuperacao($email);
     }
 
@@ -67,10 +71,5 @@ class EmailService implements IEmailService
     public function limparCodigo(): void
     {
         unset($_SESSION['cod_senha_hash'], $_SESSION['codigo_expira_em'], $_SESSION['email_recuperacao']);
-    }
-
-    public function enviarMensagem(string $destinatario, string $assunto, string $corpo): void
-    {
-        $this->sender->send($destinatario, $assunto, $corpo);
     }
 }

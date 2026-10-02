@@ -3,14 +3,16 @@
 declare(strict_types=1);
 
 use Src\App\Http\Controllers\LoginController;
+use Src\App\Infrastructure\IEmailSender;
 use Src\App\Infrastructure\IRepositories\IUserRepository;
 use Src\App\Infrastructure\Repositories\UserRepository;
 use Src\App\Services\Auditoria\AuditoriaUser;
 use Src\App\Services\AuthService;
 use Src\App\Services\IServices\IAuditoriaService;
 use Src\App\Services\IServices\IAuthService;
-use Src\App\Services\IServices\IEmailService;
+use Src\App\Services\IServices\IRecuperacaoSenhaService;
 use Src\App\Services\IServices\IUserService;
+use Src\App\Services\RecuperacaoSenhaService;
 use Src\App\Services\UserService;
 use Src\Core\Container;
 use Src\Core\Database;
@@ -44,6 +46,13 @@ Container::set(IUserService::class, static function () {
     );
 });
 
+Container::set(IRecuperacaoSenhaService::class, static function () {
+    return new RecuperacaoSenhaService(
+        Container::get(IUserRepository::class),
+        Container::get(IEmailSender::class),
+    );
+});
+
 // =====================
 // CONTROLLERS
 // =====================
@@ -51,6 +60,6 @@ Container::set(LoginController::class, static function () {
     return new LoginController(
         Container::get(IAuthService::class),
         Container::get(IUserService::class),
-        Container::get(IEmailService::class),
+        Container::get(IRecuperacaoSenhaService::class),
     );
 });
