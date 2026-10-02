@@ -9,7 +9,7 @@ use Ramsey\Uuid\Uuid;
 // TODO: renomeie esta classe e seus campos para o seu domínio
 class Exemplo
 {
-    private ?string $id;
+    private string $id;
     private string $titulo;
     private ?string $descricao;
     private ?bool $status;
@@ -48,7 +48,7 @@ class Exemplo
         );
     }
 
-    public function getId(): ?string
+    public function getId(): string
     {
         return $this->id;
     }

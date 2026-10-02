@@ -13,7 +13,7 @@ class AtualizarSenhaFormRequest extends Request
         return [
             'senha_atual' => ['required', 'string', 'min:8', 'max:150'],
             'nova_senha' => ['required', 'string', 'min:8', 'max:150'],
-            'confirmar_senha' => ['required', 'string', 'min:8', 'max:150'],
+            'confirmar_senha' => ['required', 'string', 'min:8', 'max:150', 'same:nova_senha'],
         ];
     }
 
@@ -34,6 +34,7 @@ class AtualizarSenhaFormRequest extends Request
             'confirmar_senha.string' => 'O campo confirmar senha deve ser uma string.',
             'confirmar_senha.min' => 'O campo confirmar senha deve ter no mínimo 8 caracteres.',
             'confirmar_senha.max' => 'O campo confirmar senha deve ter no máximo 150 caracteres.',
+            'confirmar_senha.same' => 'A confirmação não coincide com a nova senha.',
         ];
     }
 }

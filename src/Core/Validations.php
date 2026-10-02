@@ -395,6 +395,26 @@ trait Validations
         $this->addError($key, $value, ['dateBefore' => "O campo {$key} deve ser uma data anterior a {$arg}."]);
     }
 
+    /**
+     * Garante que o valor seja igual ao de outro campo do mesmo envio.
+     * Ex: same:nova_senha
+     */
+    public function same(string $key, mixed $value, mixed $arg): void
+    {
+        if ($arg === null) {
+            throw new \InvalidArgumentException("Regra 'same' requer um campo de referência. Ex: same:nova_senha");
+        }
+
+        $outroValor = $this->params[$arg] ?? null;
+
+        if ($value === $outroValor) {
+            $this->addSuccess($key, $value);
+            return;
+        }
+
+        $this->addError($key, $value, ['same' => "O campo {$key} deve ser igual a {$arg}."]);
+    }
+
     private function parseDbArg(string $rule, mixed $arg): array
     {
         if (empty($arg) || ! str_contains($arg, ',')) {

@@ -13,7 +13,7 @@ use Src\App\ValueObjects\Senha;
 
 class User
 {
-    private ?string $id;
+    private string $id;
     private string $nome;
     private string $email;
     private Senha $senha;
@@ -67,7 +67,7 @@ class User
         );
     }
 
-    public function getId(): ?string
+    public function getId(): string
     {
         return $this->id;
     }

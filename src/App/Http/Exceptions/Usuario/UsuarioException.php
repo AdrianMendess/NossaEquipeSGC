@@ -51,6 +51,11 @@ class UsuarioException extends DomainException
         return new self($mensagem, HttpStatus::UNPROCESSABLE_ENTITY->value);
     }
 
+    public static function senhaAtualIncorreta(): self
+    {
+        return new self('Senha atual incorreta.', HttpStatus::UNAUTHORIZED->value);
+    }
+
     public static function conflitoDeEdicao(
         string $mensagem = 'Este usuário foi alterado por outra pessoa. Recarregue a página e tente novamente.'
     ): self {

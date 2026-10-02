@@ -49,23 +49,9 @@ class ConfigController extends SharedController
             $validated = (new AtualizarSenhaFormRequest($_POST))->redirectOnFail();
             $data = $validated->validated();
 
-            $senhaAtual = $data['senha_atual'];
-            $novaSenha = $data['nova_senha'];
-            $confirmarSenha = $data['confirmar_senha'];
-
-            if ($novaSenha !== $confirmarSenha) {
-                Toast::error('A nova senha e a confirmação não coincidem.');
-                Url::redirect('/configuracoes');
-            }
-
             $userId = (string) ($_SESSION['user_id'] ?? '');
 
-            if (! $this->userService->verificarSenhaAtual($userId, $senhaAtual)) {
-                Toast::error('Senha atual incorreta.');
-                Url::redirect('/configuracoes');
-            }
-
-            $this->userService->atualizarSenha($userId, $novaSenha);
+            $this->userService->trocarSenha($userId, $data['senha_atual'], $data['nova_senha']);
 
             Toast::success('Senha atualizada com sucesso.');
             Url::redirect('/configuracoes');

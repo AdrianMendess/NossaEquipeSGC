@@ -106,14 +106,8 @@ class LoginController extends SharedController
         $data = $validated->validated();
         $email = $data['email'];
 
-        $codigoExpirado = Auth::codigoExpirado();
-        $emailDiferente = Auth::getEmailRecuperacao() !== $email;
-
         try {
-            if ($codigoExpirado || $emailDiferente) {
-                $this->userService->getUserByEmail($email);
-                $this->emailService->enviarCodigoRecuperacao($email);
-            }
+            $this->emailService->solicitarCodigoRecuperacao($email);
         } catch (UsuarioException) {
             Toast::error('Email não encontrado.');
             Url::redirect('/esqueci-senha');

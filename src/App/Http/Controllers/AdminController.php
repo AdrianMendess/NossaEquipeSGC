@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Src\App\Http\Controllers;
 
+use Src\App\Dto\User\CriarUserDto;
+use Src\App\Dto\User\EditUserDto;
 use Src\App\Http\Exceptions\Usuario\UsuarioException;
 use Src\App\Http\Requests\CriarUserFormRequest;
 use Src\App\Http\Requests\EditUserFormRequest;
@@ -84,7 +86,8 @@ class AdminController extends SharedController
         $validated = (new CriarUserFormRequest($_POST))->redirectOnFail();
 
         try {
-            $this->userService->createUser($validated->validated());
+            $dto = CriarUserDto::fromArray($validated->validated());
+            $this->userService->createUser($dto);
             Toast::success('Usuário criado com sucesso!');
             Url::redirect('/admin');
         } catch (UsuarioException $e) {
@@ -103,7 +106,8 @@ class AdminController extends SharedController
 
         try {
             $usuarioLogadoId = (string) ($_SESSION['user_id'] ?? '');
-            $this->userService->updateUser($id, $validated->validated(), $usuarioLogadoId);
+            $dto = EditUserDto::fromArray($id, $validated->validated());
+            $this->userService->updateUser($dto, $usuarioLogadoId);
             Toast::success('Usuário atualizado com sucesso!');
             Url::redirect('/admin');
         } catch (UsuarioException $e) {

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Src\App\Services;
 
+use Src\App\Dto\Exemplo\CriarExemploDto;
+use Src\App\Dto\Exemplo\EditExemploDto;
 use Src\App\Http\Exceptions\Exemplo\ExemploException;
 use Src\App\Infrastructure\IRepositories\IExemploRepository;
 use Src\App\Models\Exemplo;
@@ -17,13 +19,13 @@ class ExemploService implements IExemploService
     ) {
     }
 
-    public function create(array $data): Exemplo
+    public function create(CriarExemploDto $dto): Exemplo
     {
         $agora = date('Y-m-d H:i:s');
 
         $novo = Exemplo::fromArray([
-            'titulo' => $data['titulo'],
-            'descricao' => $data['descricao'] ?? null,
+            'titulo' => $dto->titulo,
+            'descricao' => $dto->descricao,
             'status' => true,
             'created_at' => $agora,
             'updated_at' => $agora,
@@ -32,22 +34,22 @@ class ExemploService implements IExemploService
         return Transaction::run(fn () => $this->repository->create($novo));
     }
 
-    public function update(string $id, array $data): Exemplo
+    public function update(EditExemploDto $dto): Exemplo
     {
-        $existente = $this->repository->getById($id);
+        $existente = $this->repository->getById($dto->id);
 
         if ($existente === null) {
             throw ExemploException::naoEncontrado();
         }
 
         $atualizado = Exemplo::fromArray([
-            'id' => $id,
-            'titulo' => $data['titulo'],
-            'descricao' => $data['descricao'] ?? null,
+            'id' => $dto->id,
+            'titulo' => $dto->titulo,
+            'descricao' => $dto->descricao,
             'status' => $existente->getStatus(),
             'created_at' => $existente->getCreatedAt(),
             'updated_at' => date('Y-m-d H:i:s'),
-            'version' => isset($data['version']) ? (int) $data['version'] : $existente->getVersion(),
+            'version' => $dto->version ?? $existente->getVersion(),
         ]);
 
         return Transaction::run(fn () => $this->repository->update($atualizado));
@@ -69,9 +71,15 @@ class ExemploService implements IExemploService
         return $this->repository->getAll();
     }
 
-    public function getById(string $id): ?Exemplo
+    public function getById(string $id): Exemplo
     {
-        return $this->repository->getById($id);
+        $exemplo = $this->repository->getById($id);
+
+        if ($exemplo === null) {
+            throw ExemploException::naoEncontrado();
+        }
+
+        return $exemplo;
     }
 
     public function count(): int

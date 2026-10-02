@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Src\App\Services;
 
+use Src\App\Dto\User\CriarUserDto;
+use Src\App\Dto\User\EditUserDto;
 use Src\App\Enums\Status;
 use Src\App\Http\Exceptions\Usuario\UsuarioException;
 use Src\App\Infrastructure\IRepositories\IUserRepository;
@@ -21,17 +23,17 @@ class UserService implements IUserService
         $this->repository = $repository;
     }
 
-    public function createUser(array $data): User
+    public function createUser(CriarUserDto $dto): User
     {
-        if ($this->repository->getUserByEmail($data['email']) !== null) {
+        if ($this->repository->getUserByEmail($dto->email) !== null) {
             throw UsuarioException::emailInvalido();
         }
 
         $user = User::fromArray([
-            'nome' => $data['nome'],
-            'email' => $data['email'],
-            'senha' => $data['senha'],
-            'perfil' => $data['perfil'],
+            'nome' => $dto->nome,
+            'email' => $dto->email,
+            'senha' => $dto->senha,
+            'perfil' => $dto->perfil,
             'status' => Status::ATIVO->value,
         ]);
 
@@ -47,30 +49,30 @@ class UserService implements IUserService
         Transaction::run(fn () => $this->repository->deleteUser($id), 'Erro ao deletar o usuário.');
     }
 
-    public function updateUser(string $id, array $data, ?string $usuarioLogadoId = null): User
+    public function updateUser(EditUserDto $dto, ?string $usuarioLogadoId = null): User
     {
-        $userExist = $this->repository->getUserByEmail($data['email']);
-        if ($userExist !== null && $userExist->getId() !== $id) {
+        $userExist = $this->repository->getUserByEmail($dto->email);
+        if ($userExist !== null && $userExist->getId() !== $dto->id) {
             throw UsuarioException::emailInvalido('O e-mail informado não está disponível.');
         }
 
-        $novoStatus = Status::validar((int) $data['status']);
+        $novoStatus = Status::validar($dto->status);
 
-        if ($usuarioLogadoId !== null && $usuarioLogadoId === $id && $novoStatus === Status::INATIVO) {
+        if ($usuarioLogadoId !== null && $usuarioLogadoId === $dto->id && $novoStatus === Status::INATIVO) {
             throw UsuarioException::naoPodeDesativarProprioUsuario();
         }
 
-        $existente = $this->getUserById($id);
+        $existente = $this->getUserById($dto->id);
 
         $user = User::fromArray([
-            'id' => $id,
-            'nome' => $data['nome'],
-            'email' => $data['email'],
-            'senha' => empty($data['senha']) ? $existente->getSenha() : $data['senha'],
-            'perfil' => $data['perfil'],
+            'id' => $dto->id,
+            'nome' => $dto->nome,
+            'email' => $dto->email,
+            'senha' => $dto->senha === null ? $existente->getSenha() : $dto->senha,
+            'perfil' => $dto->perfil,
             'status' => $novoStatus->value,
             'created_at' => $existente->getCreatedAt(),
-            'version' => (int) $data['version'],
+            'version' => $dto->version,
         ]);
 
         return Transaction::run(fn () => $this->repository->updateUser($user));
@@ -120,6 +122,15 @@ class UserService implements IUserService
     public function verificarSenhaAtual(string $id, string $senhaAtual): bool
     {
         return $this->getUserById($id)->verificaSenha($senhaAtual);
+    }
+
+    public function trocarSenha(string $id, string $senhaAtual, string $novaSenha): User
+    {
+        if (! $this->verificarSenhaAtual($id, $senhaAtual)) {
+            throw UsuarioException::senhaAtualIncorreta();
+        }
+
+        return $this->atualizarSenha($id, $novaSenha);
     }
 
     public function paginacao(): array

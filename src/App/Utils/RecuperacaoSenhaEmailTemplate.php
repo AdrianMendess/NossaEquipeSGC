@@ -4,24 +4,9 @@ declare(strict_types=1);
 
 namespace Src\App\Utils;
 
-use Src\Core\Logger;
-
-class EmailSend
+class RecuperacaoSenhaEmailTemplate
 {
-    public static function enviarEmail(string $emailDestino, string $codigo, string $expiraEmMinutos = '5'): void
-    {
-        $htmlData = self::buildTemplateRecuperacao($codigo, $expiraEmMinutos);
-
-        $dataMsn = json_encode([
-            'destinatarios' => [$emailDestino],
-            'assunto' => 'Projeto - Codigo de Recuperacao de Senha',
-            'corpo' => $htmlData,
-        ]);
-
-        self::enviar($dataMsn);
-    }
-
-    private static function buildTemplateRecuperacao(string $codigo, string $expiraEmMinutos): string
+    public static function render(string $codigo, string $expiraEmMinutos): string
     {
         $d1 = $codigo[0];
         $d2 = $codigo[1];
@@ -31,7 +16,7 @@ class EmailSend
         $d6 = $codigo[5];
 
         return '
-            <div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; background-color: #efede0; 
+            <div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; background-color: #efede0;
             border-radius: 12px; overflow: hidden; border: 1px solid rgba(21,11,2,0.15);">
 
                 <div style="background: linear-gradient(135deg, #87181D, #5B0E06); padding: 30px 20px; text-align:
@@ -77,33 +62,5 @@ class EmailSend
                     </p>
                 </div>
             </div>';
-    }
-
-    private static function enviar(string $dataMsn): string
-    {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type:application/json',
-            $_ENV['CHAVE_EMAIL'],
-        ]);
-
-        curl_setopt($ch, CURLOPT_URL, 'https://api.email.ati.ma.gov.br/api/mensagens/enviar');
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataMsn);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        $retorno = curl_exec($ch);
-        $curlError = $retorno === false ? curl_error($ch) : null;
-        curl_close($ch);
-
-        if ($retorno === false) {
-            Logger::error('Falha na conexão com o serviço de email: ' . $curlError);
-            throw new \RuntimeException('Falha ao conectar com o serviço de email.');
-        }
-
-        return $retorno;
     }
 }

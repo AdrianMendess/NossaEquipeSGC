@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Src\App\Http\Controllers;
 
+use Src\App\Dto\Exemplo\CriarExemploDto;
+use Src\App\Dto\Exemplo\EditExemploDto;
 use Src\App\Http\Exceptions\Exemplo\ExemploException;
 use Src\App\Http\Requests\ExemploRequest;
 use Src\App\Services\IServices\IExemploService;
@@ -62,18 +64,8 @@ class ExemploController extends SharedController
     {
         $id = trim((string) filter_input(INPUT_GET, 'id'));
 
-        if ($id === '') {
-            Toast::error('ID inválido.');
-            Url::redirect('/exemplo');
-        }
-
         try {
             $item = $this->exemploService->getById($id);
-
-            if ($item === null) {
-                Toast::error('Registro não encontrado.');
-                Url::redirect('/exemplo');
-            }
 
             $content = View::render('Exemplo/editar', [
                 'voltarUrl' => Url::path('/exemplo'),
@@ -99,7 +91,8 @@ class ExemploController extends SharedController
             $request = (new ExemploRequest($_POST))->redirectOnFail();
             $validated = $request->validated();
 
-            $this->exemploService->create($validated);
+            $dto = CriarExemploDto::fromArray($validated);
+            $this->exemploService->create($dto);
             Toast::success('Registro criado com sucesso!');
             Url::redirect('/exemplo');
         } catch (ExemploException $e) {
@@ -115,7 +108,8 @@ class ExemploController extends SharedController
             $request = (new ExemploRequest($_POST))->redirectOnFail();
             $validated = $request->validated();
 
-            $this->exemploService->update((string) $validated['id'], $validated);
+            $dto = EditExemploDto::fromArray((string) $validated['id'], $validated);
+            $this->exemploService->update($dto);
             Toast::success('Registro atualizado com sucesso!');
             Url::redirect('/exemplo');
         } catch (ExemploException $e) {
@@ -128,11 +122,6 @@ class ExemploController extends SharedController
     public function deletar(): void
     {
         $id = trim((string) filter_input(INPUT_POST, 'id'));
-
-        if ($id === '') {
-            Toast::error('ID inválido.');
-            Url::redirect('/exemplo');
-        }
 
         try {
             $this->exemploService->delete($id);
