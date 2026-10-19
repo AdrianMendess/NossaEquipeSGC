@@ -4,11 +4,13 @@ $isAdmin        = $isAdmin ?? false;
 $activeDashboard = $activeDashboard ?? false;
 $activeAdmin    = $activeAdmin ?? false;
 $activeExemplo  = $activeExemplo ?? false;
+$activeEquipe  = $activeEquipe ?? false;
 $activeConfig   = $activeConfig ?? false;
 
 $urlDashboard = $urlDashboard ?? '';
 $urlAdmin     = $urlAdmin ?? '';
 $urlExemplo   = $urlExemplo ?? '';
+$urlEquipe   =  $urlEquipe ?? '';
 $urlConfig    = $urlConfig ?? '';
 $urlLogout    = $urlLogout ?? '';
 
@@ -55,6 +57,13 @@ $linkInactive = $linkBase . ' text-slate-700 hover:bg-slate-100 hover:text-slate
                     class="<?= $activeExemplo ? $linkActive : $linkInactive ?>">
                     <i class="fa-solid fa-layer-group text-base"></i>
                     <span>Exemplo</span>
+                </a>
+            </li>
+            <li>
+                <a href="<?= htmlspecialchars($urlEquipe) ?>"
+                    class="<?= $activeEquipe ? $linkActive : $linkInactive ?>">
+                    <i class="fa-solid fa-layer-group text-base"></i>
+                    <span>Equipe</span>
                 </a>
             </li>
         </ul>

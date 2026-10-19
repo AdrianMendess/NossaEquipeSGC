@@ -191,7 +191,7 @@ class ProdutoController extends SharedController
     public function salvar(): never
     {
         $validated = (new ProdutoRequest($_POST))->redirectOnFail()->validated();
-        $this->produtoService->create($validated['nome'], (float) $validated['preco']);
+        $this->produtotService->create($validated['nome'], (float) $validated['preco']);
         Toast::success('Produto criado!');
         Url::redirect('/produto');
     }

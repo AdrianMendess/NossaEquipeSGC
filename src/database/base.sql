@@ -68,3 +68,14 @@ CREATE TABLE `tb_exemplo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
+-------------------------- Adrian alterações ---------------------
+CREATE TABLE `tb_equipe` (
+  `id`          char(36) NOT NULL,
+  `titulo`      varchar(150) NOT NULL,
+  `descricao`   varchar(500) DEFAULT NULL,
+  `status`      tinyint(1) DEFAULT 1,
+  `version`     int unsigned NOT NULL DEFAULT 1,
+  `created_at`  datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`  datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
