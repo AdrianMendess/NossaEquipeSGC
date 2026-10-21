@@ -10,6 +10,7 @@ use Src\App\Http\Exceptions\Equipe\EquipeException;
 use Src\App\Infrastructure\IRepositories\IEquipeRepository;
 use Src\App\Models\Equipe;
 use Src\App\Services\IServices\IEquipeService;
+use Src\Core\Storage;
 use Src\Core\Transaction;
 
 class EquipeService implements IEquipeService
@@ -24,8 +25,9 @@ class EquipeService implements IEquipeService
         $agora = date('Y-m-d H:i:s');
 
         $novo = Equipe::fromArray([
-            'titulo'     => $dto->titulo,
-            'descricao'  => $dto->descricao,
+            'foto'       => $dto->foto,
+            'nome'       => $dto->nome,
+            'cargo'      => $dto->cargo,
             'status'     => true,
             'created_at' => $agora,
             'updated_at' => $agora,
@@ -42,14 +44,21 @@ class EquipeService implements IEquipeService
             throw EquipeException::naoEncontrado();
         }
 
+        $foto = $dto->foto ?? $existente->getFoto();
+
+        if ($dto->foto !== null && $existente->getFoto() && $dto->foto !== $existente->getFoto()) {
+            (new Storage())->delete($existente->getFoto());
+        }
+
         $atualizado = Equipe::fromArray([
-            'id' => $dto->id,
-            'titulo' => $dto->titulo,
-            'descricao' => $dto->descricao,
-            'status' => $existente->getStatus(),
+            'id'         => $dto->id,
+            'foto'       => $foto,
+            'nome'       => $dto->nome,
+            'cargo'      => $dto->cargo,
+            'status'     => $existente->getStatus(),
             'created_at' => $existente->getCreatedAt(),
             'updated_at' => date('Y-m-d H:i:s'),
-            'version' => $dto->version ?? $existente->getVersion(),
+            'version'    => $dto->version ?? $existente->getVersion(),
         ]);
 
         return Transaction::run(fn () => $this->repository->update($atualizado));
@@ -61,6 +70,10 @@ class EquipeService implements IEquipeService
 
         if ($existente === null) {
             throw EquipeException::naoEncontrado();
+        }
+
+        if ($existente->getFoto()) {
+            (new Storage())->delete($existente->getFoto());
         }
 
         return Transaction::run(fn () => $this->repository->delete($id));

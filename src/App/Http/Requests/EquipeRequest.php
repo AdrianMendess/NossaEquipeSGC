@@ -6,15 +6,19 @@ namespace Src\App\Http\Requests;
 
 use Src\Core\Request;
 
-// TODO: adapte as regras e mensagens para o seu domínio
 class EquipeRequest extends Request
 {
     public function rules(): array
     {
+        $fotoRule = empty($this->params['id'])
+            ? ['required', 'fileType:jpg,png,jpeg,webp', 'fileSize:2048']
+            : ['nullable', 'fileType:jpg,png,jpeg,webp', 'fileSize:2048'];
+
         return [
             'id'        => ['nullable', 'string'],
-            'titulo'    => ['required', 'string', 'min:3', 'max:150'],
-            'descricao' => ['nullable', 'string', 'max:500'],
+            'foto'      => $fotoRule,
+            'nome'      => ['required', 'string', 'min:3', 'max:150'],
+            'cargo'     => ['required', 'string', 'min:2', 'max:100'],
             'version'   => ['nullable', 'integer'],
         ];
     }
@@ -22,11 +26,15 @@ class EquipeRequest extends Request
     public function messages(): array
     {
         return [
-            'titulo.required' => 'O título é obrigatório.',
-            'titulo.string'   => 'O título deve ser um texto.',
-            'titulo.min'      => 'O título deve ter pelo menos 3 caracteres.',
-            'titulo.max'      => 'O título não pode exceder 150 caracteres.',
-            'descricao.max'   => 'A descrição não pode exceder 500 caracteres.',
+            'foto.required' => 'A foto é obrigatória.',
+            'foto.fileType' => 'O tipo de arquivo da foto não é permitido.',
+            'foto.fileSize' => 'O arquivo deve conter no máximo 2MB.',
+            'nome.required' => 'O nome é obrigatório.',
+            'nome.string'   => 'O nome deve ser um texto.',
+            'nome.min'      => 'O nome deve ter pelo menos 3 caracteres.',
+            'nome.max'      => 'O nome não pode exceder 150 caracteres.',
+            'cargo.required'=> 'O cargo é obrigatório.',
+            'cargo.string'  => 'O cargo deve ser um texto.',
         ];
     }
 }

@@ -10,7 +10,6 @@ use Src\App\Infrastructure\IRepositories\IEquipeRepository;
 use Src\App\Models\Equipe;
 use Src\Core\Database;
 
-// TODO: renomeie para o seu domínio e adapte os campos SQL
 class EquipeRepository implements IEquipeRepository
 {
     private PDO $conn;
@@ -21,13 +20,14 @@ class EquipeRepository implements IEquipeRepository
     }
 
     public function create(Equipe $equipe): Equipe
-    {
-        $sql = 'INSERT INTO tb_equipe (id, titulo, descricao, status, created_at, updated_at)
-                VALUES (:id, :titulo, :descricao, :status, :created_at, :updated_at)';
+    { 
+        $sql = 'INSERT INTO tb_equipe (id, foto, nome, cargo, status, created_at, updated_at)
+                VALUES (:id, :foto, :nome, :cargo, :status, :created_at, :updated_at)';
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':id', $equipe->getId(), PDO::PARAM_STR);
-        $stmt->bindValue(':titulo', $equipe->getTitulo());
-        $stmt->bindValue(':descricao', $equipe->getDescricao());
+        $stmt->bindValue(':foto', $equipe->getFoto());
+        $stmt->bindValue(':nome', $equipe->getNome());
+        $stmt->bindValue(':cargo', $equipe->getCargo());
         $stmt->bindValue(':status', $equipe->getStatus(), PDO::PARAM_BOOL);
         $stmt->bindValue(':created_at', $equipe->getCreatedAt());
         $stmt->bindValue(':updated_at', $equipe->getUpdatedAt());
@@ -39,12 +39,13 @@ class EquipeRepository implements IEquipeRepository
     public function update(Equipe $equipe): Equipe
     {
         $sql = 'UPDATE tb_equipe
-                SET titulo = :titulo, descricao = :descricao,
+                SET foto = :foto, nome = :nome, cargo = :cargo,
                     status = :status, updated_at = :updated_at, version = version + 1
                 WHERE id = :id AND version = :expectedVersion';
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':titulo', $equipe->getTitulo());
-        $stmt->bindValue(':descricao', $equipe->getDescricao());
+        $stmt->bindValue(':foto', $equipe->getFoto());
+        $stmt->bindValue(':nome', $equipe->getNome());
+        $stmt->bindValue(':cargo', $equipe->getCargo());
         $stmt->bindValue(':status', $equipe->getStatus(), PDO::PARAM_BOOL);
         $stmt->bindValue(':updated_at', $equipe->getUpdatedAt());
         $stmt->bindValue(':id', $equipe->getId(), PDO::PARAM_STR);
@@ -60,14 +61,15 @@ class EquipeRepository implements IEquipeRepository
 
     public function getAll(): array
     {
-        $sql = 'SELECT id, titulo, descricao, status, version FROM tb_equipe ORDER BY id DESC';
+        $sql = 'SELECT id, foto, nome, cargo, status, version FROM tb_equipe ORDER BY id DESC';
         $stmt = $this->conn->query($sql);
         $itens = [];
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $itens[] = new Equipe(
-                titulo: $row['titulo'],
-                descricao: $row['descricao'],
+                foto: $row['foto'],
+                nome: $row['nome'],
+                cargo: $row['cargo'],
                 status: (bool) $row['status'],
                 created_at: null,
                 updated_at: null,
@@ -89,8 +91,9 @@ class EquipeRepository implements IEquipeRepository
 
         if ($row) {
             return new Equipe(
-                titulo: $row['titulo'],
-                descricao: $row['descricao'],
+                foto: $row['foto'],
+                nome: $row['nome'],
+                cargo: $row['cargo'],
                 status: (bool) $row['status'],
                 created_at: $row['created_at'],
                 updated_at: $row['updated_at'],

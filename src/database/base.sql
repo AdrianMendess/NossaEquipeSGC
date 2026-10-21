@@ -71,8 +71,9 @@ SET FOREIGN_KEY_CHECKS = 1;
 -------------------------- Adrian alterações ---------------------
 CREATE TABLE `tb_equipe` (
   `id`          char(36) NOT NULL,
-  `titulo`      varchar(150) NOT NULL,
-  `descricao`   varchar(500) DEFAULT NULL,
+  `foto`        VARCHAR(255) NOT NULL,
+  `nome`      varchar(150) NOT NULL,
+  `cargo`   varchar(500) DEFAULT NULL,
   `status`      tinyint(1) DEFAULT 1,
   `version`     int unsigned NOT NULL DEFAULT 1,
   `created_at`  datetime DEFAULT CURRENT_TIMESTAMP,

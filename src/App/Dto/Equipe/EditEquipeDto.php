@@ -8,8 +8,9 @@ final class EditEquipeDto
 {
     public function __construct(
         public readonly string $id,
-        public readonly string $titulo,
-        public readonly ?string $descricao,
+        public readonly ?string $foto,
+        public readonly string $nome,
+        public readonly ?string $cargo,
         public readonly ?int $version,
     ) {
     }
@@ -18,8 +19,9 @@ final class EditEquipeDto
     {
         return new self(
             id: $id,
-            titulo: $data['titulo'],
-            descricao: $data['descricao'] ?? null,
+            foto: is_string($data['foto'] ?? null) ? $data['foto'] : null,
+            nome: $data['nome'],
+            cargo: $data['cargo'] ?? null,
             version: isset($data['version']) ? (int) $data['version'] : null,
         );
     }

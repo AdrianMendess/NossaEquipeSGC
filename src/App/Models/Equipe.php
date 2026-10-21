@@ -6,20 +6,21 @@ namespace Src\App\Models;
 
 use Ramsey\Uuid\Uuid;
 
-// TODO: renomeie esta classe e seus campos para o seu domínio
 class Equipe
 {
     private string $id;
-    private string $titulo;
-    private ?string $descricao;
+    private ?string $foto;
+    private string $nome;
+    private ?string $cargo;
     private ?bool $status;
     private ?string $created_at;
     private ?string $updated_at;
     private int $version = 1;
 
     public function __construct(
-        string $titulo,
-        ?string $descricao = null,
+        string $nome,
+        ?string $cargo = null,
+        ?string $foto = null,
         ?bool $status = null,
         ?string $created_at = null,
         ?string $updated_at = null,
@@ -27,8 +28,9 @@ class Equipe
         int $version = 1
     ) {
         $this->setId($id);
-        $this->titulo = $titulo;
-        $this->descricao = $descricao;
+        $this->nome = $nome;
+        $this->cargo = $cargo;
+        $this->foto = $foto;
         $this->status = $status;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
@@ -38,8 +40,9 @@ class Equipe
     public static function fromArray(array $data): self
     {
         return new self(
-            titulo: $data['titulo'],
-            descricao: $data['descricao'] ?? null,
+            nome: $data['nome'],
+            cargo: $data['cargo'] ?? null,
+            foto: $data['foto'] ?? null,
             status: $data['status'] ?? null,
             created_at: $data['created_at'] ?? null,
             updated_at: $data['updated_at'] ?? null,
@@ -58,24 +61,35 @@ class Equipe
         $this->id = $id ?? Uuid::uuid7()->toString();
     }
 
-    public function getTitulo(): string
+    // CORRIGIDO: O retorno agora aceita nulo (?string)
+    public function getFoto(): ?string
     {
-        return $this->titulo;
+        return $this->foto;
     }
 
-    public function setTitulo(string $titulo): void
+    public function setFoto(?string $foto): void
     {
-        $this->titulo = $titulo;
+        $this->foto = $foto;
     }
 
-    public function getDescricao(): ?string
+    public function getNome(): string
     {
-        return $this->descricao;
+        return $this->nome;
     }
 
-    public function setDescricao(?string $descricao): void
+    public function setNome(string $nome): void
     {
-        $this->descricao = $descricao;
+        $this->nome = $nome;
+    }
+
+    public function getCargo(): ?string
+    {
+        return $this->cargo;
+    }
+
+    public function setCargo(?string $cargo): void
+    {
+        $this->cargo = $cargo;
     }
 
     public function getStatus(): ?bool

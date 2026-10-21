@@ -8,7 +8,6 @@ use Src\App\Infrastructure\IRepositories\IEquipeRepository;
 use Src\App\Models\Equipe;
 use Src\App\Services\IServices\IAuditoriaService;
 
-// TODO: renomeie para o seu domínio (ex: AuditoriaProduto, AuditoriaCliente)
 class AuditoriaEquipe implements IEquipeRepository
 {
     public function __construct(
@@ -25,7 +24,11 @@ class AuditoriaEquipe implements IEquipeRepository
             'Equipe',
             'create',
             $criado->getId(),
-            ['titulo' => $criado->getTitulo(), 'descricao' => $criado->getDescricao()]
+            [
+                'nome'  => $criado->getNome(),
+                'cargo' => $criado->getCargo(),
+                'foto'  => $criado->getFoto(),
+            ]
         );
         return $criado;
     }
@@ -40,8 +43,16 @@ class AuditoriaEquipe implements IEquipeRepository
             'update',
             $atualizado->getId(),
             [
-                'antes'  => ['titulo' => $antes?->getTitulo(), 'descricao' => $antes?->getDescricao()],
-                'depois' => ['titulo' => $atualizado->getTitulo(), 'descricao' => $atualizado->getDescricao()],
+                'antes'  => [
+                    'nome'  => $antes?->getNome(),
+                    'cargo' => $antes?->getCargo(),
+                    'foto'  => $antes?->getFoto(),
+                ],
+                'depois' => [
+                    'nome'  => $atualizado->getNome(),
+                    'cargo' => $atualizado->getCargo(),
+                    'foto'  => $atualizado->getFoto(),
+                ],
             ]
         );
         return $atualizado;

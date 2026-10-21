@@ -27,6 +27,9 @@ desktop.ini
 # Assets
 *.map
 .history/
+public/uploads/equipe/*
+!public/uploads/equipe/.gitkeep
+
 
 # Temp files
 *.tmp

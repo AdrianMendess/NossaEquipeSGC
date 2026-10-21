@@ -7,16 +7,18 @@ namespace Src\App\Dto\Equipe;
 final class CriarEquipeDto
 {
     public function __construct(
-        public readonly string $titulo,
-        public readonly ?string $descricao,
+        public readonly string $nome,
+        public readonly ?string $cargo,
+        public readonly ?string $foto,
     ) {
     }
 
     public static function fromArray(array $data): self
     {
         return new self(
-            titulo: $data['titulo'],
-            descricao: $data['descricao'] ?? null,
+            nome: $data['nome'],
+            cargo: $data['cargo'] ?? null,
+            foto: is_string($data['foto'] ?? null) ? $data['foto'] : null,
         );
     }
 }
