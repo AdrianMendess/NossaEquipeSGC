@@ -12,8 +12,8 @@
 <div class="space-y-6">
     <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <h1 class="text-3xl font-semibold tracking-tight text-slate-900">Exemplo</h1>
-            <p class="mt-1 text-sm text-slate-600">Gerencie os registros de exemplo</p>
+            <h1 class="text-3xl font-semibold tracking-tight text-slate-900">Nossa Equipe</h1>
+            <p class="mt-1 text-sm text-slate-600">Gerencie os registros de Nossa Equipe</p>
         </div>
         <a href="<?= $urlCriar ?>"
             class="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">

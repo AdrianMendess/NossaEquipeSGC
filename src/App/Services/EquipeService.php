@@ -10,6 +10,7 @@ use Src\App\Http\Exceptions\Equipe\EquipeException;
 use Src\App\Infrastructure\IRepositories\IEquipeRepository;
 use Src\App\Models\Equipe;
 use Src\App\Services\IServices\IEquipeService;
+use Src\Core\Storage;
 use Src\Core\Transaction;
 
 class EquipeService implements IEquipeService
@@ -24,8 +25,9 @@ class EquipeService implements IEquipeService
         $agora = date('Y-m-d H:i:s');
 
         $novo = Equipe::fromArray([
-            'titulo'     => $dto->titulo,
-            'descricao'  => $dto->descricao,
+            'foto'       => $dto->foto,
+            'nome'       => $dto->nome,
+            'cargo'      => $dto->cargo,
             'status'     => true,
             'created_at' => $agora,
             'updated_at' => $agora,
@@ -44,8 +46,8 @@ class EquipeService implements IEquipeService
 
         $atualizado = Equipe::fromArray([
             'id' => $dto->id,
-            'titulo' => $dto->titulo,
-            'descricao' => $dto->descricao,
+            'nome' => $dto->nome,
+            'cargo' => $dto->cargo,
             'status' => $existente->getStatus(),
             'created_at' => $existente->getCreatedAt(),
             'updated_at' => date('Y-m-d H:i:s'),

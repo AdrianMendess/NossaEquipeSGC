@@ -63,7 +63,7 @@ $linkInactive = $linkBase . ' text-slate-700 hover:bg-slate-100 hover:text-slate
                 <a href="<?= htmlspecialchars($urlEquipe) ?>"
                     class="<?= $activeEquipe ? $linkActive : $linkInactive ?>">
                     <i class="fa-solid fa-layer-group text-base"></i>
-                    <span>Equipe</span>
+                    <span>Nossa Equipe</span>
                 </a>
             </li>
         </ul>
