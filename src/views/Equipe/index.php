@@ -5,6 +5,8 @@
  * @var string $urlCriar
  * @var string $editarUrl
  * @var string $deletarUrl
+ * @var string $urlIndex
+ * @var string $ordem
  */
 
 use Src\App\Utils\Url;
@@ -16,6 +18,12 @@ $cargosMap = [
     'infraestrutura' => 'Infraestrutura / DevOps',
     'analista_dados' => 'Analista de Dados',
 ];
+
+$ordem = $ordem ?? 'ASC';
+$urlIndex = $urlIndex ?? Url::path('/equipe');
+$proximaOrdem = ($ordem === 'ASC') ? 'DESC' : 'ASC';
+$iconeOrdem = ($ordem === 'ASC') ? 'fa-arrow-down-a-z' : 'fa-arrow-up-z-a';
+$textoOrdem = ($ordem === 'ASC') ? 'Nome (A-Z)' : 'Nome (Z-A)';
 ?>
 
 <div class="space-y-6">
@@ -24,11 +32,21 @@ $cargosMap = [
             <h1 class="text-3xl font-semibold tracking-tight text-slate-900">Equipe</h1>
             <p class="mt-1 text-sm text-slate-600">Gerencie os integrantes da equipe</p>
         </div>
-        <a href="<?= $urlCriar ?>"
-            class="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">
-            <i class="fa-solid fa-plus"></i>
-            Novo Integrante
-        </a>
+        <div class="flex items-center gap-3">
+            <!-- Botão de Alternar Ordem -->
+            <a href="<?= $urlIndex ?>?ordem=<?= $proximaOrdem ?>"
+                class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+                title="Clique para alternar para <?= $proximaOrdem === 'ASC' ? 'A-Z' : 'Z-A' ?>">
+                <i class="fa-solid <?= $iconeOrdem ?> text-slate-500"></i>
+                <span><?= $textoOrdem ?></span>
+            </a>
+
+            <a href="<?= $urlCriar ?>"
+                class="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">
+                <i class="fa-solid fa-plus"></i>
+                Novo Integrante
+            </a>
+        </div>
     </div>
 
     <?php if (empty($itens)) : ?>
@@ -45,7 +63,12 @@ $cargosMap = [
             <thead>
                 <tr class="border-b border-slate-200">
                     <th class="px-5 py-3 text-left font-semibold text-slate-700">Foto</th>
-                    <th class="px-5 py-3 text-left font-semibold text-slate-700">Nome</th>
+                    <th class="px-5 py-3 text-left font-semibold text-slate-700">
+                        <a href="<?= $urlIndex ?>?ordem=<?= $proximaOrdem ?>" class="inline-flex items-center gap-1.5 hover:text-slate-900 transition-colors" title="Alternar ordenação">
+                            Nome
+                            <i class="fa-solid <?= $ordem === 'ASC' ? 'fa-arrow-down-a-z' : 'fa-arrow-up-z-a' ?> text-xs text-slate-400"></i>
+                        </a>
+                    </th>
                     <th class="px-5 py-3 text-left font-semibold text-slate-700">Cargo</th>
                     <th class="px-5 py-3 text-left font-semibold text-slate-700">Status</th>
                     <th class="px-5 py-3 text-right font-semibold text-slate-700">Ações</th>

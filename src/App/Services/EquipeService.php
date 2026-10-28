@@ -79,9 +79,9 @@ class EquipeService implements IEquipeService
         return Transaction::run(fn () => $this->repository->delete($id));
     }
 
-    public function getAll(): array
+    public function getAll(string $ordem = 'ASC'): array
     {
-        return $this->repository->getAll();
+        return $this->repository->getAll($ordem);
     }
 
     public function getById(string $id): Equipe

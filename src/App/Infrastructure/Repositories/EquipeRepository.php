@@ -59,9 +59,10 @@ class EquipeRepository implements IEquipeRepository
         return $equipe;
     }
 
-    public function getAll(): array
+    public function getAll(string $ordem = 'ASC'): array
     {
-        $sql = 'SELECT id, foto, nome, cargo, status, version FROM tb_equipe ORDER BY id DESC';
+        $dir = strtoupper($ordem) === 'DESC' ? 'DESC' : 'ASC';
+        $sql = "SELECT id, foto, nome, cargo, status, version FROM tb_equipe ORDER BY nome {$dir}";
         $stmt = $this->conn->query($sql);
         $itens = [];
 

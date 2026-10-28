@@ -25,9 +25,14 @@ class EquipeController extends SharedController
     public function index(): string
     {
         try {
-            $itens = $this->equipeService->getAll();
+            $ordem = strtoupper((string) (filter_input(INPUT_GET, 'ordem') ?? 'ASC'));
+            $ordem = in_array($ordem, ['ASC', 'DESC'], true) ? $ordem : 'ASC';
+
+            $itens = $this->equipeService->getAll($ordem);
             $content = View::render('Equipe/index', [
                 'itens'      => $itens,
+                'ordem'      => $ordem,
+                'urlIndex'   => Url::path('/equipe'),
                 'voltarUrl'  => Url::path('/home'),
                 'urlCriar'   => Url::path('/equipe/criar'),
                 'editarUrl'  => Url::path('/equipe/editar'),
