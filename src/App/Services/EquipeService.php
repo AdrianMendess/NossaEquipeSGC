@@ -55,7 +55,7 @@ class EquipeService implements IEquipeService
             'foto'       => $foto,
             'nome'       => $dto->nome,
             'cargo'      => $dto->cargo,
-            'status'     => $existente->getStatus(),
+            'status' => $dto->status, 
             'created_at' => $existente->getCreatedAt(),
             'updated_at' => date('Y-m-d H:i:s'),
             'version'    => $dto->version ?? $existente->getVersion(),

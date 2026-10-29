@@ -180,4 +180,37 @@ class EquipeController extends SharedController
             Url::redirect('/equipe');
         }
     }
+
+    public function alternarStatus(): void
+{
+    $id = trim((string) filter_input(INPUT_GET, 'id'));
+
+    try {
+        $item = $this->equipeService->getById($id);
+
+        if ($item) {
+            // Inverte o status atual (se for true/1 vira false/0, e vice-versa)
+            $novoStatus = !$item->getStatus();
+
+            // Cria o DTO com o novo status mantendo os outros dados
+            $dto = new EditEquipeDto(
+                id: $item->getId(),
+                nome: $item->getNome(),
+                cargo: $item->getCargo(),
+                foto: null, // Mantém a foto existente no Service
+                version: $item->getVersion(),
+                status: $novoStatus
+            );
+
+            $this->equipeService->update($dto);
+            Toast::success('Status de publicação alterado com sucesso!');
+        }
+    } catch (\Throwable $e) {
+        Toast::error('Erro ao alternar status do integrante.');
+        Logger::error($e->getMessage());
+    }
+
+    // Redireciona de volta para a listagem
+    Url::redirect('/equipe');
+}
 }

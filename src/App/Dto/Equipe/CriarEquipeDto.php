@@ -10,6 +10,7 @@ final class CriarEquipeDto
         public readonly string $nome,
         public readonly ?string $cargo,
         public readonly ?string $foto,
+        public readonly bool $status = true, 
     ) {
     }
 
@@ -19,6 +20,7 @@ final class CriarEquipeDto
             nome: $data['nome'],
             cargo: $data['cargo'] ?? null,
             foto: is_string($data['foto'] ?? null) ? $data['foto'] : null,
+            status: filter_var($data['status'] ?? true, FILTER_VALIDATE_BOOLEAN)
         );
     }
 }

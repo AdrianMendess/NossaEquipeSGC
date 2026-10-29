@@ -12,6 +12,7 @@ final class EditEquipeDto
         public readonly string $nome,
         public readonly ?string $cargo,
         public readonly ?int $version,
+        public readonly bool $status,
     ) {
     }
 
@@ -23,6 +24,7 @@ final class EditEquipeDto
             nome: $data['nome'],
             cargo: $data['cargo'] ?? null,
             version: isset($data['version']) ? (int) $data['version'] : null,
-        );
+            status: isset($data['status']) ? (bool) (int) $data['status'] : false      
+  );
     }
 }

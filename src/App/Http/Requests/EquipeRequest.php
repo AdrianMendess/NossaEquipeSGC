@@ -20,6 +20,7 @@ class EquipeRequest extends Request
             'nome'      => ['required', 'string', 'min:3', 'max:150'],
             'cargo'     => ['required', 'string', 'min:2', 'max:100'],
             'version'   => ['nullable', 'integer'],
+            'status'    => ['nullable', 'boolean'],
         ];
     }
 

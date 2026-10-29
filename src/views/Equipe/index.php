@@ -22,8 +22,7 @@ $cargosMap = [
 $ordem = $ordem ?? 'ASC';
 $urlIndex = $urlIndex ?? Url::path('/equipe');
 $proximaOrdem = ($ordem === 'ASC') ? 'DESC' : 'ASC';
-$iconeOrdem = ($ordem === 'ASC') ? 'fa-arrow-down-a-z' : 'fa-arrow-up-z-a';
-$textoOrdem = ($ordem === 'ASC') ? 'Nome (A-Z)' : 'Nome (Z-A)';
+$textoOrdem = ($ordem === 'ASC') ? 'Ordem (ASC)' : 'Ordem (DESC)';
 ?>
 
 <div class="space-y-6">
@@ -36,8 +35,7 @@ $textoOrdem = ($ordem === 'ASC') ? 'Nome (A-Z)' : 'Nome (Z-A)';
             <!-- Botão de Alternar Ordem -->
             <a href="<?= $urlIndex ?>?ordem=<?= $proximaOrdem ?>"
                 class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
-                title="Clique para alternar para <?= $proximaOrdem === 'ASC' ? 'A-Z' : 'Z-A' ?>">
-                <i class="fa-solid <?= $iconeOrdem ?> text-slate-500"></i>
+                title="Clique para alternar para <?= $proximaOrdem === 'ASC' ? 'ASC' : 'DESC' ?>">
                 <span><?= $textoOrdem ?></span>
             </a>
 
@@ -63,12 +61,7 @@ $textoOrdem = ($ordem === 'ASC') ? 'Nome (A-Z)' : 'Nome (Z-A)';
             <thead>
                 <tr class="border-b border-slate-200">
                     <th class="px-5 py-3 text-left font-semibold text-slate-700">Foto</th>
-                    <th class="px-5 py-3 text-left font-semibold text-slate-700">
-                        <a href="<?= $urlIndex ?>?ordem=<?= $proximaOrdem ?>" class="inline-flex items-center gap-1.5 hover:text-slate-900 transition-colors" title="Alternar ordenação">
-                            Nome
-                            <i class="fa-solid <?= $ordem === 'ASC' ? 'fa-arrow-down-a-z' : 'fa-arrow-up-z-a' ?> text-xs text-slate-400"></i>
-                        </a>
-                    </th>
+                    <th class="px-5 py-3 text-left font-semibold text-slate-700">Nome</th>
                     <th class="px-5 py-3 text-left font-semibold text-slate-700">Cargo</th>
                     <th class="px-5 py-3 text-left font-semibold text-slate-700">Status</th>
                     <th class="px-5 py-3 text-right font-semibold text-slate-700">Ações</th>
@@ -88,12 +81,14 @@ $textoOrdem = ($ordem === 'ASC') ? 'Nome (A-Z)' : 'Nome (Z-A)';
                     </td>
                     <td class="px-5 py-3 font-medium text-slate-900"><?= htmlspecialchars($item->getNome()) ?></td>
                     <td class="px-5 py-3 text-slate-600"><?= htmlspecialchars($cargosMap[$item->getCargo()] ?? $item->getCargo() ?? '—') ?></td>
-                    <td class="px-5 py-3">
-                        <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium
-                            <?= $item->getStatus() ? 'bg-green-100 text-green-700' : 'bg-rose-100 text-rose-700' ?>">
-                            <?= $item->getStatus() ? 'Ativo' : 'Inativo' ?>
-                        </span>
-                    </td>
+                   <td class="px-5 py-3">
+    <a href="<?= Url::path('/equipe/alternar-status?id=' . $item->getId()) ?>" 
+       class="inline-flex items-center gap-2.5 rounded-full px-2.5 py-1 text-xs font-semibold transition-colors <?= $item->getStatus() ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-rose-100 text-rose-700 hover:bg-rose-200' ?>"
+       title="Clique para <?= $item->getStatus() ? 'despublicar' : 'publicar' ?>">
+        <i class="fa-solid <?= $item->getStatus() ? 'fa-eye' : 'fa-eye-slash' ?>"></i>
+        <?= $item->getStatus() ? 'Publicado' : 'Não Publicado' ?>
+    </a>
+</td>
                     <td class="px-5 py-3 text-right">
                         <div class="flex items-center justify-end gap-2">
                             <a href="<?= $editarUrl . '?id=' . $item->getId() ?>"

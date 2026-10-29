@@ -46,7 +46,7 @@ class EquipeRepository implements IEquipeRepository
         $stmt->bindValue(':foto', $equipe->getFoto());
         $stmt->bindValue(':nome', $equipe->getNome());
         $stmt->bindValue(':cargo', $equipe->getCargo());
-        $stmt->bindValue(':status', $equipe->getStatus(), PDO::PARAM_BOOL);
+        $stmt->bindValue(':status', $equipe->getStatus() ? 1 : 0, PDO::PARAM_INT);
         $stmt->bindValue(':updated_at', $equipe->getUpdatedAt());
         $stmt->bindValue(':id', $equipe->getId(), PDO::PARAM_STR);
         $stmt->bindValue(':expectedVersion', $equipe->getVersion(), PDO::PARAM_INT);
@@ -62,7 +62,7 @@ class EquipeRepository implements IEquipeRepository
     public function getAll(string $ordem = 'ASC'): array
     {
         $dir = strtoupper($ordem) === 'DESC' ? 'DESC' : 'ASC';
-        $sql = "SELECT id, foto, nome, cargo, status, version FROM tb_equipe ORDER BY nome {$dir}";
+        $sql = "SELECT id, foto, nome, cargo, status, version FROM tb_equipe ORDER BY created_at {$dir}";
         $stmt = $this->conn->query($sql);
         $itens = [];
 
