@@ -7,8 +7,10 @@
  */
 
 use Src\App\Utils\Url;
-
-$cargoAtual = old('cargo', $item->getCargo());
+ 
+$nomeAtual   = $item ? $item->getNome() : '';
+$cargoAtual  = $item ? $item->getCargo() : '';
+$statusAtual = ($item && $item->getStatus()) ? '1' : '0';
 ?>
 
 <div class="space-y-6">
@@ -42,7 +44,7 @@ $cargoAtual = old('cargo', $item->getCargo());
                 <div>
                     <label for="nome" class="block text-sm font-medium text-slate-700">Nome <span class="text-rose-600">*</span></label>
                     <input type="text" id="nome" name="nome" required minlength="3" maxlength="150"
-                        value="<?= old('nome', htmlspecialchars($item->getNome())) ?>"
+                        value="<?= $nomeAtual?>"
                         class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100">
                     <?= old_error('nome') ?>
                 </div>
@@ -59,6 +61,14 @@ $cargoAtual = old('cargo', $item->getCargo());
                         <option value="analista_dados" <?= $cargoAtual === 'analista_dados' ? 'selected' : '' ?>>Analista de Dados</option>
                     </select>
                     <?= old_error('cargo') ?>
+                </div>
+
+                <div>
+                    <label for="status" class="block text-sm font-medium text-slate-700">Status de Publicação</label>
+                    <select id="status" name="status" class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white">
+                        <option value="1" <?= (string) $statusAtual === '1' ? 'selected' : '' ?>>Publicado</option>
+                        <option value="0" <?= $statusAtual === '0' ? 'selected' : '' ?>>Não Publicado</option>
+                    </select>
                 </div>
             </div>
 
