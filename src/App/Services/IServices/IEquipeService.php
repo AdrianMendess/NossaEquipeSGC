@@ -13,7 +13,7 @@ interface IEquipeService
     public function create(CriarEquipeDto $dto): Equipe;
     public function update(EditEquipeDto $dto): Equipe;
     public function delete(string $id): bool;
-    public function getAll(string $ordem = 'ASC'): array;
+    public function getAll(?string $busca = null, string $ordem = 'ASC'): array;
     public function getById(string $id): Equipe;
     public function count(): int;
 }

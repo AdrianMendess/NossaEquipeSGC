@@ -59,28 +59,41 @@ class EquipeRepository implements IEquipeRepository
         return $equipe;
     }
 
-    public function getAll(string $ordem = 'ASC'): array
-    {
-        $dir = strtoupper($ordem) === 'DESC' ? 'DESC' : 'ASC';
-        $sql = "SELECT id, foto, nome, cargo, status, version FROM tb_equipe ORDER BY created_at {$dir}";
-        $stmt = $this->conn->query($sql);
-        $itens = [];
+    public function getAll(?string $busca = null, string $ordem = 'ASC'): array
+{
+    $dir = strtoupper($ordem) === 'DESC' ? 'DESC' : 'ASC';
+    
+    $sql = 'SELECT id, foto, nome, cargo, status, version FROM tb_equipe';
+    $params = [];
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $itens[] = new Equipe(
-                foto: $row['foto'],
-                nome: $row['nome'],
-                cargo: $row['cargo'],
-                status: (bool) $row['status'],
-                created_at: null,
-                updated_at: null,
-                id: $row['id'],
-                version: (int) $row['version'],
-            );
-        }
-
-        return $itens;
+    // Adiciona o filtro caso o usuário tenha buscado por algo
+    if ($busca !== null && trim($busca) !== '') {
+        $sql .= ' WHERE (nome LIKE :buscaNome OR cargo LIKE :buscaCargo)';
+        $params[':buscaNome']  = '%' . trim($busca) . '%';
+        $params[':buscaCargo'] = '%' . trim($busca) . '%';
     }
+    // se não buscar nada, fica livre para a ordenar a lista.
+    $sql .= " ORDER BY created_at {$dir}";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute($params);
+    $itens = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $itens[] = new Equipe(
+            foto: $row['foto'],
+            nome: $row['nome'],
+            cargo: $row['cargo'],
+            status: (bool) $row['status'],
+            created_at: null,
+            updated_at: null,
+            id: $row['id'],
+            version: (int) $row['version'],
+        );
+    }
+
+    return $itens;
+}
 
     public function getById(string $id): ?Equipe
     {

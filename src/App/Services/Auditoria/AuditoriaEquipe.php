@@ -73,9 +73,9 @@ class AuditoriaEquipe implements IEquipeRepository
         return $deleted;
     }
 
-    public function getAll(string $ordem = 'ASC'): array
+    public function getAll(?string $busca = null, string $ordem = 'ASC'): array
     {
-        return $this->repository->getAll($ordem);
+        return $this->repository->getAll($busca, $ordem);
     }
 
     public function getById(string $id): ?Equipe

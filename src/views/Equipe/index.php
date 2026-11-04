@@ -7,6 +7,7 @@
  * @var string $deletarUrl
  * @var string $urlIndex
  * @var string $ordem
+ * @var string $busca
  */
 
 use Src\App\Utils\Url;
@@ -19,6 +20,7 @@ $cargosMap = [
     'analista_dados' => 'Analista de Dados',
 ];
 
+$busca = $busca ?? '';
 $ordem = $ordem ?? 'ASC';
 $urlIndex = $urlIndex ?? Url::path('/equipe');
 $proximaOrdem = ($ordem === 'ASC') ? 'DESC' : 'ASC';
@@ -32,8 +34,8 @@ $textoOrdem = ($ordem === 'ASC') ? 'Ordem (ASC)' : 'Ordem (DESC)';
             <p class="mt-1 text-sm text-slate-600">Gerencie os integrantes da equipe</p>
         </div>
         <div class="flex items-center gap-3">
-            <!-- Botão de Alternar Ordem -->
-            <a href="<?= $urlIndex ?>?ordem=<?= $proximaOrdem ?>"
+            <!-- Botão de Alternar Ordem (preserva a busca caso exista) -->
+            <a href="<?= $urlIndex ?>?ordem=<?= $proximaOrdem ?><?= !empty($busca) ? '&busca=' . urlencode($busca) : '' ?>"
                 class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
                 title="Clique para alternar para <?= $proximaOrdem === 'ASC' ? 'ASC' : 'DESC' ?>">
                 <span><?= $textoOrdem ?></span>
@@ -47,13 +49,42 @@ $textoOrdem = ($ordem === 'ASC') ? 'Ordem (ASC)' : 'Ordem (DESC)';
         </div>
     </div>
 
+    <!-- Formulário de Busca -->
+    <form method="GET" action="<?= $urlIndex ?>" class="flex items-center gap-2 max-w-md">
+        <input type="hidden" name="ordem" value="<?= htmlspecialchars($ordem) ?>">
+        <div class="relative w-full flex items-center">
+            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+            <input 
+                type="text" 
+                name="busca" 
+                value="<?= htmlspecialchars($busca) ?>" 
+                placeholder="Buscar por nome ou cargo..." 
+                class="w-full rounded-xl border border-slate-200 bg-white pl-11 pr-3 py-2 text-sm text-slate-900 focus:border-slate-400 focus:outline-none"
+            />
+        </div>
+        <button type="submit" class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">
+            Buscar
+        </button>
+        <?php if (!empty($busca)): ?>
+            <a href="<?= $urlIndex ?>?ordem=<?= $ordem ?>" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Limpar
+            </a>
+        <?php endif; ?>
+    </form>
+
     <?php if (empty($itens)) : ?>
         <div class="rounded-2xl border border-dashed border-slate-200 bg-white p-10 text-center">
             <div class="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
                 <i class="fa-solid fa-users"></i>
             </div>
-            <p class="mt-3 text-sm font-semibold text-slate-900">Nenhum integrante cadastrado.</p>
-            <p class="mt-1 text-sm text-slate-600">Clique em "Novo Integrante" para começar.</p>
+            <p class="mt-3 text-sm font-semibold text-slate-900">
+                <?= !empty($busca) ? 'Nenhum integrante encontrado.' : 'Nenhum integrante cadastrado.' ?>
+            </p>
+            <p class="mt-1 text-sm text-slate-600">
+                <?= !empty($busca) ? 'Tente buscar por outros termos.' : 'Clique em "Novo Integrante" para começar.' ?>
+            </p>
         </div>
     <?php else : ?>
         <div class="rounded-2xl border border-slate-200 bg-white">
