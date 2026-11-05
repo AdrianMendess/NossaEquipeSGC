@@ -59,20 +59,56 @@ class EquipeRepository implements IEquipeRepository
         return $equipe;
     }
 
-    public function getAll(?string $busca = null, string $ordem = 'ASC'): array
+public function getAll(?string $busca = null, string $ordem = 'ASC'): array
 {
     $dir = strtoupper($ordem) === 'DESC' ? 'DESC' : 'ASC';
     
     $sql = 'SELECT id, foto, nome, cargo, status, version FROM tb_equipe';
     $params = [];
 
-    // Adiciona o filtro caso o usuário tenha buscado por algo
     if ($busca !== null && trim($busca) !== '') {
-        $sql .= ' WHERE (nome LIKE :buscaNome OR cargo LIKE :buscaCargo)';
-        $params[':buscaNome']  = '%' . trim($busca) . '%';
-        $params[':buscaCargo'] = '%' . trim($busca) . '%';
+        $termo = trim($busca);
+        
+        // Mapeamento inverso: Texto amigável -> Slug salvo no banco
+        $mapCargos = [
+            'dev_frontend'   => ['desenvolvedor front-end', 'front-end', 'front', 'frontend'],
+            'dev_backend'    => ['desenvolvedor back-end', 'back-end', 'back', 'backend'],
+            'dev_fullstack'  => ['desenvolvedor full stack', 'full stack', 'fullstack'],
+            'infraestrutura' => ['profissional de infraestrutura', 'infraestrutura', 'devops', 'infra'],
+            'analista_dados' => ['analista de dados', 'dados', 'data'],
+        ];
+
+        $cargosEncontrados = [];
+        $termoLower = mb_strtolower($termo);
+
+        foreach ($mapCargos as $chave => $variacoes) {
+            foreach ($variacoes as $var) {
+                if (str_contains($var, $termoLower) || str_contains($termoLower, $var)) {
+                    $cargosEncontrados[] = $chave;
+                    break;
+                }
+            }
+        }
+
+        // Monta o SQL dinâmico
+        $sql .= ' WHERE (nome LIKE :buscaNome OR cargo LIKE :buscaCargo';
+        $params[':buscaNome']  = '%' . $termo . '%';
+        $params[':buscaCargo'] = '%' . $termo . '%';
+
+        // Se encontrou slugs correspondentes ao termo digitado, inclui no WHERE
+        if (!empty($cargosEncontrados)) {
+            $inClause = [];
+            foreach ($cargosEncontrados as $i => $slug) {
+                $paramName = ":slugCg{$i}";
+                $inClause[] = $paramName;
+                $params[$paramName] = $slug;
+            }
+            $sql .= ' OR cargo IN (' . implode(',', $inClause) . ')';
+        }
+
+        $sql .= ')';
     }
-    // se não buscar nada, fica livre para a ordenar a lista.
+
     $sql .= " ORDER BY created_at {$dir}";
 
     $stmt = $this->conn->prepare($sql);

@@ -51,28 +51,32 @@ $textoOrdem = ($ordem === 'ASC') ? 'Ordem (ASC)' : 'Ordem (DESC)';
 
     <!-- Formulário de Busca -->
     <form method="GET" action="<?= $urlIndex ?>" class="flex items-center gap-2 max-w-md">
-        <input type="hidden" name="ordem" value="<?= htmlspecialchars($ordem) ?>">
-        <div class="relative w-full flex items-center">
-            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </span>
-            <input 
-                type="text" 
-                name="busca" 
-                value="<?= htmlspecialchars($busca) ?>" 
-                placeholder="Buscar por nome ou cargo..." 
-                class="w-full rounded-xl border border-slate-200 bg-white pl-11 pr-3 py-2 text-sm text-slate-900 focus:border-slate-400 focus:outline-none"
-            />
+    <input type="hidden" name="ordem" value="<?= htmlspecialchars($ordem) ?>">
+    
+    <div class="relative w-full">
+               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+            <i class="fa-solid fa-magnifying-glass"></i>
         </div>
-        <button type="submit" class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">
-            Buscar
-        </button>
-        <?php if (!empty($busca)): ?>
-            <a href="<?= $urlIndex ?>?ordem=<?= $ordem ?>" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
-                Limpar
-            </a>
-        <?php endif; ?>
-    </form>
+        
+        <input 
+            type="text" 
+            name="busca" 
+            value="<?= htmlspecialchars($busca) ?>" 
+            placeholder="Buscar por nome ou cargo..." 
+            class="w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 py-2 text-sm text-slate-900 focus:border-slate-400 focus:outline-none"
+        />
+    </div>
+
+    <button type="submit" class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 transition-colors">
+        Buscar
+    </button>
+    
+    <?php if (!empty($busca)): ?>
+        <a href="<?= $urlIndex ?>?ordem=<?= $ordem ?>" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
+            Limpar
+        </a>
+    <?php endif; ?>
+</form>
 
     <?php if (empty($itens)) : ?>
         <div class="rounded-2xl border border-dashed border-slate-200 bg-white p-10 text-center">
