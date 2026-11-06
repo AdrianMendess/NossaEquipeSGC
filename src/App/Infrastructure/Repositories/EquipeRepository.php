@@ -59,9 +59,9 @@ class EquipeRepository implements IEquipeRepository
         return $equipe;
     }
 
-public function getAll(?string $busca = null, string $ordem = 'ASC'): array
+public function getAll(?string $busca = null, string $ordem = 'DESC'): array
 {
-    $dir = strtoupper($ordem) === 'DESC' ? 'DESC' : 'ASC';
+    $dir = strtoupper($ordem) === 'ASC' ? 'ASC' : 'DESC';
     
     $sql = 'SELECT id, foto, nome, cargo, status, version FROM tb_equipe';
     $params = [];

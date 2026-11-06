@@ -19,15 +19,15 @@ class EquipeController extends SharedController
 {
     public function __construct(
         private IEquipeService $equipeService
-    ) {
-    }
+    ) {}
 
     public function index(): string
     {
         try {
             $busca = trim((string) filter_input(INPUT_GET, 'busca'));
-            $ordem = strtoupper((string) (filter_input(INPUT_GET, 'ordem') ?? 'ASC'));
-            $ordem = in_array($ordem, ['ASC', 'DESC'], true) ? $ordem : 'ASC';
+            $ordemInput = filter_input(INPUT_GET, 'ordem');
+            $ordem = $ordemInput ? strtoupper((string) $ordemInput) : 'DESC';
+            $ordem = in_array($ordem, ['ASC', 'DESC'], true) ? $ordem : 'DESC';
 
             $itens = $this->equipeService->getAll($busca, $ordem);
             $content = View::render('Equipe/index', [
@@ -184,69 +184,69 @@ class EquipeController extends SharedController
     }
 
     public function alternarStatus(): void
-{
-    $id = trim((string) filter_input(INPUT_GET, 'id'));
-
-    try {
-        $item = $this->equipeService->getById($id);
-
-        if ($item) {
-            // Inverte o status atual (se for true/1 vira false/0, e vice-versa)
-            $novoStatus = !$item->getStatus();
-
-            // Cria o DTO com o novo status mantendo os outros dados
-            $dto = new EditEquipeDto(
-                id: $item->getId(),
-                nome: $item->getNome(),
-                cargo: $item->getCargo(),
-                foto: null, // Mantém a foto existente no Service
-                version: $item->getVersion(),
-                status: $novoStatus
-            );
-
-            $this->equipeService->update($dto);
-            Toast::success('Status de publicação alterado com sucesso!');
-        }
-    } catch (\Throwable $e) {
-        Toast::error('Erro ao alternar status do integrante.');
-        Logger::error($e->getMessage());
-    }
-
-    // Redireciona de volta para a listagem
-    Url::redirect('/equipe');
-}
-public function visualizar(): string
-{
-    try {
+    {
         $id = trim((string) filter_input(INPUT_GET, 'id'));
 
-        if ($id === '') {
-            Toast::error('Registro inválido.');
-            Url::redirect('/equipe');
+        try {
+            $item = $this->equipeService->getById($id);
+
+            if ($item) {
+                // Inverte o status atual (se for true/1 vira false/0, e vice-versa)
+                $novoStatus = !$item->getStatus();
+
+                // Cria o DTO com o novo status mantendo os outros dados
+                $dto = new EditEquipeDto(
+                    id: $item->getId(),
+                    nome: $item->getNome(),
+                    cargo: $item->getCargo(),
+                    foto: null, // Mantém a foto existente no Service
+                    version: $item->getVersion(),
+                    status: $novoStatus
+                );
+
+                $this->equipeService->update($dto);
+                Toast::success('Status de publicação alterado com sucesso!');
+            }
+        } catch (\Throwable $e) {
+            Toast::error('Erro ao alternar status do integrante.');
+            Logger::error($e->getMessage());
         }
 
-        $item = $this->equipeService->getById($id);
-
-        if (!$item) {
-            Toast::error('Integrante não encontrado.');
-            Url::redirect('/equipe');
-        }
-
-        $content = View::render('Equipe/visualizar', [
-            'item'      => $item,
-            'voltarUrl' => Url::path('/equipe'),
-            'editarUrl' => Url::path('/equipe/editar'),
-        ]);
-
-        return self::getPage('EQUIPE - DETALHES', $content, [
-            'showSidebar' => true,
-            'bodyClass'   => 'equipe-page',
-            'activePage'  => 'equipe',
-        ]);
-    } catch (\Throwable $e) {
-        Toast::error('Erro ao carregar detalhes.');
-        Logger::error($e->getMessage());
+        // Redireciona de volta para a listagem
         Url::redirect('/equipe');
     }
-}
+    public function visualizar(): string
+    {
+        try {
+            $id = trim((string) filter_input(INPUT_GET, 'id'));
+
+            if ($id === '') {
+                Toast::error('Registro inválido.');
+                Url::redirect('/equipe');
+            }
+
+            $item = $this->equipeService->getById($id);
+
+            if (!$item) {
+                Toast::error('Integrante não encontrado.');
+                Url::redirect('/equipe');
+            }
+
+            $content = View::render('Equipe/visualizar', [
+                'item'      => $item,
+                'voltarUrl' => Url::path('/equipe'),
+                'editarUrl' => Url::path('/equipe/editar'),
+            ]);
+
+            return self::getPage('EQUIPE - DETALHES', $content, [
+                'showSidebar' => true,
+                'bodyClass'   => 'equipe-page',
+                'activePage'  => 'equipe',
+            ]);
+        } catch (\Throwable $e) {
+            Toast::error('Erro ao carregar detalhes.');
+            Logger::error($e->getMessage());
+            Url::redirect('/equipe');
+        }
+    }
 }

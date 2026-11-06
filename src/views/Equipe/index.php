@@ -21,10 +21,10 @@ $cargosMap = [
 ];
 
 $busca = $busca ?? '';
-$ordem = $ordem ?? 'ASC';
+$ordem = $ordem ?? 'DESC';
 $urlIndex = $urlIndex ?? Url::path('/equipe');
 $proximaOrdem = ($ordem === 'ASC') ? 'DESC' : 'ASC';
-$textoOrdem = ($ordem === 'ASC') ? 'Ordem (ASC)' : 'Ordem (DESC)';
+$textoOrdem = ($ordem === 'ASC') ? 'Ordem ↑' : 'Ordem ↓';
 ?>
 
 <div class="space-y-6">
