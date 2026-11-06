@@ -14,3 +14,5 @@ $router->post('/equipe/atualizar', [EquipeController::class, 'atualizar'], [Auth
 $router->post('/equipe/deletar', [EquipeController::class, 'deletar'], [AuthMiddleware::class]);
 $router->get('/equipe/alternar-status', [EquipeController::class, 'alternarStatus'],
 [AuthMiddleware::class]);
+$router->get('/equipe/visualizar', [EquipeController::class, 'visualizar'],
+[AuthMiddleware::class]);

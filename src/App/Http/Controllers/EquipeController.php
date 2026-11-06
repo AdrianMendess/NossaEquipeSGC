@@ -215,4 +215,38 @@ class EquipeController extends SharedController
     // Redireciona de volta para a listagem
     Url::redirect('/equipe');
 }
+public function visualizar(): string
+{
+    try {
+        $id = trim((string) filter_input(INPUT_GET, 'id'));
+
+        if ($id === '') {
+            Toast::error('Registro inválido.');
+            Url::redirect('/equipe');
+        }
+
+        $item = $this->equipeService->getById($id);
+
+        if (!$item) {
+            Toast::error('Integrante não encontrado.');
+            Url::redirect('/equipe');
+        }
+
+        $content = View::render('Equipe/visualizar', [
+            'item'      => $item,
+            'voltarUrl' => Url::path('/equipe'),
+            'editarUrl' => Url::path('/equipe/editar'),
+        ]);
+
+        return self::getPage('EQUIPE - DETALHES', $content, [
+            'showSidebar' => true,
+            'bodyClass'   => 'equipe-page',
+            'activePage'  => 'equipe',
+        ]);
+    } catch (\Throwable $e) {
+        Toast::error('Erro ao carregar detalhes.');
+        Logger::error($e->getMessage());
+        Url::redirect('/equipe');
+    }
+}
 }
