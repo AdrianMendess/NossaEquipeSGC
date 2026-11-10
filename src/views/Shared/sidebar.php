@@ -1,16 +1,18 @@
 <?php
 // TODO: adicione aqui as entradas de menu dos módulos do seu projeto
-$isAdmin        = $isAdmin ?? false;
+$isAdmin         = $isAdmin ?? false;
 $activeDashboard = $activeDashboard ?? false;
-$activeAdmin    = $activeAdmin ?? false;
-$activeExemplo  = $activeExemplo ?? false;
-$activeEquipe  = $activeEquipe ?? false;
-$activeConfig   = $activeConfig ?? false;
+$activeAdmin     = $activeAdmin ?? false;
+$activeExemplo   = $activeExemplo ?? false;
+$activeCliente   = $activeCliente ?? false;
+$activeEquipe    = $activeEquipe ?? false;
+$activeConfig    = $activeConfig ?? false;
 
 $urlDashboard = $urlDashboard ?? '';
 $urlAdmin     = $urlAdmin ?? '';
 $urlExemplo   = $urlExemplo ?? '';
-$urlEquipe   =  $urlEquipe ?? '';
+$urlCliente   = $urlCliente?? '';
+$urlEquipe    =  $urlEquipe ?? '';
 $urlConfig    = $urlConfig ?? '';
 $urlLogout    = $urlLogout ?? '';
 
@@ -57,6 +59,13 @@ $linkInactive = $linkBase . ' text-slate-700 hover:bg-slate-100 hover:text-slate
                     class="<?= $activeExemplo ? $linkActive : $linkInactive ?>">
                     <i class="fa-solid fa-layer-group text-base"></i>
                     <span>Exemplo</span>
+                </a>
+            </li>
+            <li>
+                <a href="<?= htmlspecialchars($urlCliente) ?>"
+                    class="<?= $activeCliente ? $linkActive : $linkInactive ?>">
+                    <i class="fa-solid fa-layer-group text-base"></i>
+                    <span>Clientes</span>
                 </a>
             </li>
             <li>
