@@ -27,7 +27,7 @@ class ClienteController extends SharedController
         try {
             $itens = $this->clienteService->getAll();
             $content = View::render('Cliente/index', [
-                'itens'      => $itens,
+                'itens'      => $itens, 
                 'voltarUrl'  => Url::path('/home'),
                 'urlCriar'   => Url::path('/cliente/criar'),
                 'editarUrl'  => Url::path('/cliente/editar'),

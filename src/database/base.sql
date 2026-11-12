@@ -81,11 +81,13 @@ CREATE TABLE `tb_equipe` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+drop table tb_cliente;
 CREATE TABLE `tb_cliente` (
   `id`          char(36) NOT NULL,
   `nome`      varchar(150) NOT NULL,
   `tipo`      varchar(150) NOT NULL,
   `status`      tinyint(1) DEFAULT 1,
+    `version`     int unsigned NOT NULL DEFAULT 1,
   `created_at`  datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at`  datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)

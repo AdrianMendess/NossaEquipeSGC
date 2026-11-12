@@ -11,7 +11,7 @@ $activeConfig    = $activeConfig ?? false;
 $urlDashboard = $urlDashboard ?? '';
 $urlAdmin     = $urlAdmin ?? '';
 $urlExemplo   = $urlExemplo ?? '';
-$urlCliente   = $urlCliente?? '';
+$urlCliente   = $urlCliente ?? '';
 $urlEquipe    =  $urlEquipe ?? '';
 $urlConfig    = $urlConfig ?? '';
 $urlLogout    = $urlLogout ?? '';
@@ -32,7 +32,6 @@ $linkInactive = $linkBase . ' text-slate-700 hover:bg-slate-100 hover:text-slate
             <i class="fa-solid fa-xmark"></i>
         </button>
     </div>
-
     <nav class="flex h-[calc(100vh-4rem)] flex-col justify-between overflow-y-auto p-4">
         <ul class="space-y-1">
             <li>
@@ -63,6 +62,7 @@ $linkInactive = $linkBase . ' text-slate-700 hover:bg-slate-100 hover:text-slate
             </li>
             <li>
                 <a href="<?= htmlspecialchars($urlCliente) ?>"
+              
                     class="<?= $activeCliente ? $linkActive : $linkInactive ?>">
                     <i class="fa-solid fa-layer-group text-base"></i>
                     <span>Clientes</span>
