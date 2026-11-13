@@ -3,8 +3,11 @@
 /**
  * @var string  $voltarUrl
  * @var string  $urlSalvar
- * @var \Src\App\Models\Exemplo $item
+ * @var \Src\App\Models\Cliente $item
  */
+
+$nomeAtual   = $item ? $item->getNome() : '';
+$tipoAtual   = $item ? $item->getTipo() : '';
 
 ?>
 
@@ -24,20 +27,24 @@
 
             <div class="space-y-4">
                 <div>
-                    <label for="titulo" class="block text-sm font-medium text-slate-700">Título <span class="text-rose-600">*</span></label>
-                    <input type="text" id="titulo" name="titulo" required minlength="3" maxlength="150"
-                        value="<?= old('titulo', htmlspecialchars($item->getTitulo())) ?>"
+                    <label for="nome" class="block text-sm font-medium text-slate-700">Nome <span class="text-rose-600">*</span></label>
+                    <input type="text" id="nome" name="nome" required minlength="3" maxlength="150"
+                        value="<?= htmlspecialchars($item->getNome()) ?>"
                         class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100">
-                    <?= old_error('titulo') ?>
+                    <?= old_error('nome') ?>
                 </div>
 
-                <div>
-                    <label for="descricao" class="block text-sm font-medium text-slate-700">Descrição</label>
-                    <textarea id="descricao" name="descricao" maxlength="500" rows="3"
-                        class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
-                    ><?= old('descricao', htmlspecialchars($item->getDescricao() ?? '')) ?></textarea>
-                    <?= old_error('descricao') ?>
+                 <div>
+                    <label for="tipo" class="block text-sm font-medium text-slate-700">Tipo <span class="text-rose-600">*</span></label>
+                    <select id="tipo" name="tipo" required
+                        class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100 bg-white">
+                        <option value="" disabled <?= empty($tipoAtual) ? 'selected' : '' ?>>Selecione o tipo...</option>
+                        <option value="pessoa_fisica" <?= old('tipo') === 'pessoa_fisica' ? 'selected' : '' ?>>Pessoa Física</option>
+                        <option value="pessoa_juridica" <?= old('tipo') === 'pessoa_juridica' ? 'selected' : '' ?>>Pessoa Jurídica</option>
+                    </select>
+                    <?= old_error('tipo') ?>
                 </div>
+                
             </div>
 
             <div class="mt-6 flex justify-end gap-3">
