@@ -58,26 +58,36 @@ class ClienteRepository implements IClienteRepository
         return $cliente;
     }
 
-    public function getAll(): array
-    {
-        $sql = 'SELECT id, nome, tipo, status, version FROM tb_cliente ORDER BY id DESC';
-        $stmt = $this->conn->query($sql);
-        $itens = [];
+    public function getAll(?string $tipo = null): array
+{
+    $sql = 'SELECT id, nome, tipo, status, version FROM tb_cliente';
+    $params = [];
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $itens[] = new Cliente(
-                nome: $row['nome'],
-                tipo: $row['tipo'],
-                status: (bool) $row['status'],
-                created_at: null,
-                updated_at: null,
-                id: $row['id'],
-                version: (int) $row['version'],
-            );
-        }
-
-        return $itens;
+    if ($tipo === 'pessoa_fisica' || $tipo === 'pessoa_juridica') {
+        $sql .= ' WHERE tipo = :tipo';
+        $params[':tipo'] = $tipo;
     }
+
+    $sql .= ' ORDER BY id DESC';
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute($params);
+    $itens = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $itens[] = new Cliente(
+            nome: $row['nome'],
+            tipo: $row['tipo'],
+            status: (bool) $row['status'],
+            created_at: null,
+            updated_at: null,
+            id: $row['id'],
+            version: (int) $row['version'],
+        );
+    }
+
+    return $itens;
+}
 
     public function getById(string $id): ?Cliente
     {

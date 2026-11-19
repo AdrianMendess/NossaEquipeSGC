@@ -23,28 +23,37 @@ class ClienteController extends SharedController
     }
 
     public function index(): string
-    {
-        try {
-            $itens = $this->clienteService->getAll();
-            $content = View::render('Cliente/index', [
-                'itens'      => $itens, 
-                'voltarUrl'  => Url::path('/home'),
-                'urlCriar'   => Url::path('/cliente/criar'),
-                'editarUrl'  => Url::path('/cliente/editar'),
-                'deletarUrl' => Url::path('/cliente/deletar'),
-            ]);
+{
+    try {
+        $tipo = (string) filter_input(INPUT_GET, 'tipo');
 
-            return self::getPage('CLIENTE - LISTAGEM', $content, [
-                'showSidebar' => true,
-                'bodyClass'   => 'cliente-page',
-                'activePage'  => 'cliente',
-            ]);
-        } catch (ClienteException $e) {
-            Toast::error($e->getMessage());
-            Logger::error($e->getMessage());
-            Url::redirect('/home');
-        }
+        $itens = $this->clienteService->getAll($tipo);
+
+        $content = View::render('Cliente/index', [
+            'itens'      => $itens,
+            'tipo'       => $tipo,
+            'urlIndex'   => Url::path('/cliente'),
+            'voltarUrl'  => Url::path('/home'),
+            'urlCriar'   => Url::path('/cliente/criar'),
+            'editarUrl'  => Url::path('/cliente/editar'),
+            'deletarUrl' => Url::path('/cliente/deletar'),
+        ]);
+
+        return self::getPage('CLIENTE - LISTAGEM', $content, [
+            'showSidebar' => true,
+            'bodyClass'   => 'cliente-page',
+            'activePage'  => 'cliente',
+        ]);
+    } catch (ClienteException $e) {
+        Toast::error($e->getMessage());
+        Logger::error($e->getMessage());
+        Url::redirect('/home');
+    } catch (\Throwable $e) {
+        Toast::error('Erro ao listar registros.');
+        Logger::error($e->getMessage());
+        Url::redirect('/home');
     }
+}
 
     public function criar(): string
     {

@@ -14,8 +14,7 @@ class AuditoriaCliente implements IClienteRepository
     public function __construct(
         private IClienteRepository $repository,
         private IAuditoriaService $auditoriaService
-    ) {
-    }
+    ) {}
 
     public function create(Cliente $cliente): Cliente
     {
@@ -62,9 +61,9 @@ class AuditoriaCliente implements IClienteRepository
         return $deleted;
     }
 
-    public function getAll(): array
+    public function getAll(?string $tipo = null): array
     {
-        return $this->repository->getAll();
+        return $this->repository->getAll($tipo);
     }
 
     public function getById(string $id): ?Cliente

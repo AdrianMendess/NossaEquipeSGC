@@ -87,7 +87,7 @@ CREATE TABLE `tb_cliente` (
   `nome`      varchar(150) NOT NULL,
   `tipo`      varchar(150) NOT NULL,
   `status`      tinyint(1) DEFAULT 1,
-    `version`     int unsigned NOT NULL DEFAULT 1,
+  `version`     int unsigned NOT NULL DEFAULT 1,
   `created_at`  datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at`  datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
