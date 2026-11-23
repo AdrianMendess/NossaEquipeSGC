@@ -16,8 +16,7 @@ class ClienteRequest extends Request
             'nome'    => ['required', 'string', 'min:3', 'max:150'],
             'tipo' => ['nullable', 'string', 'max:500'],
             'version'   => ['nullable', 'integer'],
-            'status'    => ['nullable', 'boolean'],
-        ];
+            'status' => ['nullable', 'integer', 'in:0,1'],        ];
     }
 
     public function messages(): array
@@ -28,6 +27,9 @@ class ClienteRequest extends Request
             'nome.min'      => 'O título deve ter pelo menos 3 caracteres.',
             'nome.max'      => 'O título não pode exceder 150 caracteres.',
             'tipo.max'   => 'A descrição não pode exceder 500 caracteres.',
+
+            'status.required' => 'O campo status é obrigatório.',
+            'status.in' => 'O campo status deve ser "ativo" ou "inativo".',
         ];
     }
 }

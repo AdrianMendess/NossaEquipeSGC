@@ -113,6 +113,7 @@ class ClienteController extends SharedController
 
     public function atualizar(): void
     {
+    
         try {
             $request = (new ClienteRequest($_POST))->redirectOnFail();
             $validated = $request->validated();

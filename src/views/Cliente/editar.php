@@ -8,6 +8,7 @@
 
 $nomeAtual   = $item ? $item->getNome() : '';
 $tipoAtual   = $item ? $item->getTipo() : '';
+$statusAtual = ($item && $item->getStatus()) ? '1' : '0';
 
 ?>
 
@@ -44,7 +45,13 @@ $tipoAtual   = $item ? $item->getTipo() : '';
                     </select>
                     <?= old_error('tipo') ?>
                 </div>
-                
+                <div>
+                    <label for="status" class="block text-sm font-medium text-slate-700">Status</label>
+                    <select id="status" name="status" class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white">
+                        <option value="1" <?= (string) $statusAtual === '1' ? 'selected' : '' ?>>Ativo</option>
+                        <option value="0" <?= $statusAtual === '0' ? 'selected' : '' ?>>Inativo</option>
+                    </select>
+                </div>
             </div>
 
             <div class="mt-6 flex justify-end gap-3">

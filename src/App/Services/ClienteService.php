@@ -46,7 +46,7 @@ class ClienteService implements IClienteService
             'id' => $dto->id,
             'nome' => $dto->nome,
             'tipo' => $dto->tipo,
-            'status' => $existente->getStatus(),
+            'status' => $dto->status,
             'created_at' => $existente->getCreatedAt(),
             'updated_at' => date('Y-m-d H:i:s'),
             'version' => $dto->version ?? $existente->getVersion(),

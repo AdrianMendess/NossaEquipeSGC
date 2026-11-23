@@ -133,6 +133,7 @@ class EquipeController extends SharedController
 
     public function atualizar(): void
     {
+        
         try {
             $request = (new EquipeRequest($_POST))->redirectOnFail();
             $validated = $request->validated();
