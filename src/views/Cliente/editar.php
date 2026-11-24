@@ -7,7 +7,7 @@
  */
 
 $nomeAtual   = $item ? $item->getNome() : '';
-$tipoAtual   = $item ? $item->getTipo() : '';
+$tipoAtual   = old('tipo') ?: ($item ? $item->getTipo() : '');
 $statusAtual = ($item && $item->getStatus()) ? '1' : '0';
 
 ?>
@@ -40,8 +40,8 @@ $statusAtual = ($item && $item->getStatus()) ? '1' : '0';
                     <select id="tipo" name="tipo" required
                         class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100 bg-white">
                         <option value="" disabled <?= empty($tipoAtual) ? 'selected' : '' ?>>Selecione o tipo...</option>
-                        <option value="pessoa_fisica" <?= old('tipo') === 'pessoa_fisica' ? 'selected' : '' ?>>Pessoa Física</option>
-                        <option value="pessoa_juridica" <?= old('tipo') === 'pessoa_juridica' ? 'selected' : '' ?>>Pessoa Jurídica</option>
+                        <option value="pessoa_fisica" <?= $tipoAtual === 'pessoa_fisica' ? 'selected' : '' ?>>Pessoa Física</option>
+                        <option value="pessoa_juridica" <?= $tipoAtual === 'pessoa_juridica' ? 'selected' : '' ?>>Pessoa Jurídica</option>
                     </select>
                     <?= old_error('tipo') ?>
                 </div>

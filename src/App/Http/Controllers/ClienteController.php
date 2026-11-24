@@ -26,12 +26,14 @@ class ClienteController extends SharedController
 {
     try {
         $tipo = (string) filter_input(INPUT_GET, 'tipo');
+        $status = (string) filter_input(INPUT_GET, 'status');
 
-        $itens = $this->clienteService->getAll($tipo);
+        $itens = $this->clienteService->getAll($tipo, $status);
 
         $content = View::render('Cliente/index', [
             'itens'      => $itens,
             'tipo'       => $tipo,
+            'status'     => $status,
             'urlIndex'   => Url::path('/cliente'),
             'voltarUrl'  => Url::path('/home'),
             'urlCriar'   => Url::path('/cliente/criar'),

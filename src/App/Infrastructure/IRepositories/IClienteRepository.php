@@ -12,7 +12,7 @@ interface IClienteRepository
     public function create(Cliente $cliente): Cliente;
     public function update(Cliente $cliente): Cliente;
     public function delete(string $id): bool;
-    public function getAll(): array;
+    public function getAll(?string $tipo = null, ?string $status = null): array;
     public function getById(string $id): ?Cliente;
     public function count(): int;
 }

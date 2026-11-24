@@ -13,7 +13,7 @@ interface IClienteService
     public function create(CriarClienteDto $dto): Cliente;
     public function update(EditClienteDto $dto): Cliente;
     public function delete(string $id): bool;
-    public function getAll(): array;
+    public function getAll(?string $tipo = null, ?string $status = null): array;
     public function getById(string $id): Cliente;
     public function count(): int;
 }

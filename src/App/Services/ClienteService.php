@@ -66,9 +66,9 @@ class ClienteService implements IClienteService
         return Transaction::run(fn () => $this->repository->delete($id));
     }
 
-    public function getAll(?string $status = null): array
+    public function getAll(?string $tipo = null, ?string $status = null): array
 {
-    return $this->repository->getAll($status);
+    return $this->repository->getAll($tipo, $status);
 }
 
     public function getById(string $id): Cliente

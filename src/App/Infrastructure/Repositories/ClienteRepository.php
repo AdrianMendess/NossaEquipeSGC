@@ -58,14 +58,24 @@ class ClienteRepository implements IClienteRepository
         return $cliente;
     }
 
-    public function getAll(?string $tipo = null): array
+    public function getAll(?string $tipo = null, ?string $status = null): array
 {
     $sql = 'SELECT id, nome, tipo, status, version FROM tb_cliente';
+    $conditions = [];
     $params = [];
 
     if ($tipo === 'pessoa_fisica' || $tipo === 'pessoa_juridica') {
-        $sql .= ' WHERE tipo = :tipo';
+        $conditions[] = 'tipo = :tipo';
         $params[':tipo'] = $tipo;
+    }
+
+    if ($status === '0' || $status === '1'){
+    $conditions[] = 'status = :status';
+    $params[':status'] = (int) $status;
+    }
+
+    if (!empty($conditions)) {
+        $sql .= ' WHERE ' . implode(' AND ', $conditions);
     }
 
     $sql .= ' ORDER BY id DESC';

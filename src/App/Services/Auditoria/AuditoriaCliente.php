@@ -61,9 +61,9 @@ class AuditoriaCliente implements IClienteRepository
         return $deleted;
     }
 
-    public function getAll(?string $tipo = null): array
+    public function getAll(?string $tipo = null, ?string $status = null): array
     {
-        return $this->repository->getAll($tipo);
+        return $this->repository->getAll($tipo, $status);
     }
 
     public function getById(string $id): ?Cliente
