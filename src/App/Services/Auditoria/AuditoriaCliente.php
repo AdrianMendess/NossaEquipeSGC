@@ -24,7 +24,7 @@ class AuditoriaCliente implements IClienteRepository
             'Cliente',
             'create',
             $criado->getId(),
-            ['nome' => $criado->getNome(), 'tipo' => $criado->getTipo()]
+            ['nome' => $criado->getNome(), 'tipo' => $criado->getTipo(),'cpc_cnpj' => $criado->getTipo(), 'telefone' => $criado->getTelefone()]
         );
         return $criado;
     }
@@ -39,8 +39,8 @@ class AuditoriaCliente implements IClienteRepository
             'update',
             $atualizado->getId(),
             [
-                'antes'  => ['nome' => $antes?->getNome(), 'tipo' => $antes?->getTipo()],
-                'depois' => ['nome' => $atualizado->getNome(), 'tipo' => $atualizado->getTipo()],
+                'antes'  => ['nome' => $antes?->getNome(), 'tipo' => $antes?->getTipo(),'cpc_cnpj' => $antes?->getTipo(), 'telefone' => $antes?->getTelefone()],
+                'depois' => ['nome' => $atualizado->getNome(), 'tipo' => $atualizado->getTipo(),'cpc_cnpj' => $atualizado->getTipo(), 'telefone' => $atualizado->getTelefone()],
             ]
         );
         return $atualizado;

@@ -92,3 +92,8 @@ CREATE TABLE `tb_cliente` (
   `updated_at`  datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+ALTER TABLE tb_cliente
+ADD COLUMN cpf_cnpj VARCHAR(18) NULL AFTER tipo,
+ADD COLUMN telefone VARCHAR(14) NULL AFTER cpf_cnpj;

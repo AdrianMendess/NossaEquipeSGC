@@ -26,6 +26,8 @@ class ClienteService implements IClienteService
         $novo = Cliente::fromArray([
             'nome' => $dto->nome,
             'tipo' => $dto->tipo,
+            'cpf_cnpj' => $this->limparDigitos($dto->cpfCnpj),
+            'telefone' => $this->limparDigitos($dto->telefone),
             'status' => true,
             'created_at' => $agora,
             'updated_at' => $agora,
@@ -46,6 +48,8 @@ class ClienteService implements IClienteService
             'id' => $dto->id,
             'nome' => $dto->nome,
             'tipo' => $dto->tipo,
+            'cpf_cnpj' => $this->limparDigitos($dto->cpfCnpj),
+            'telefone' => $this->limparDigitos($dto->telefone),
             'status' => $dto->status,
             'created_at' => $existente->getCreatedAt(),
             'updated_at' => date('Y-m-d H:i:s'),
@@ -86,4 +90,16 @@ class ClienteService implements IClienteService
     {
         return $this->repository->count();
     }
+
+    private function limparDigitos(?string $valor): ?string
+    {
+        if ($valor === null) {
+            return null;
+        }
+
+        $limpo = preg_replace('/\D/', '', $valor);
+
+        return ($limpo !== null && $limpo !== '') ? $limpo : null;
+    }
+
 }

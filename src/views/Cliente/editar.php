@@ -35,7 +35,7 @@ $statusAtual = ($item && $item->getStatus()) ? '1' : '0';
                     <?= old_error('nome') ?>
                 </div>
 
-                 <div>
+                <div>
                     <label for="tipo" class="block text-sm font-medium text-slate-700">Tipo <span class="text-rose-600">*</span></label>
                     <select id="tipo" name="tipo" required
                         class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100 bg-white">
@@ -45,6 +45,24 @@ $statusAtual = ($item && $item->getStatus()) ? '1' : '0';
                     </select>
                     <?= old_error('tipo') ?>
                 </div>
+                <div>
+                    <label for="cpf_cnpj" class="block text-sm font-medium text-slate-700">CPF / CNPJ</label>
+                    <input type="text" id="cpf_cnpj" name="cpf_cnpj" maxlength="18"
+                        value="<?= htmlspecialchars((string) (old('cpf_cnpj') ?: ($item->getCpfCnpj() ?? ''))) ?>"
+                        placeholder="Apenas números ou formatado"
+                        class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100">
+                    <?= old_error('cpf_cnpj') ?>
+                </div>
+
+                <div>
+                    <label for="telefone" class="block text-sm font-medium text-slate-700">Telefone</label>
+                    <input type="text" id="telefone" name="telefone" maxlength="15"
+                        value="<?= htmlspecialchars((string) (old('telefone') ?: ($item->getTelefone() ?? ''))) ?>"
+                        placeholder="DDD + número"
+                        class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100">
+                    <?= old_error('telefone') ?>
+                </div>
+                
                 <div>
                     <label for="status" class="block text-sm font-medium text-slate-700">Status</label>
                     <select id="status" name="status" class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white">

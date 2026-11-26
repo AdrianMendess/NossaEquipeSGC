@@ -9,6 +9,8 @@ final class CriarClienteDto
     public function __construct(
         public readonly string $nome,
         public readonly ?string $tipo,
+        public readonly ?string $cpfCnpj,
+        public readonly ?string $telefone,
         public readonly bool $status = true,
     ) {
     }
@@ -16,8 +18,10 @@ final class CriarClienteDto
     public static function fromArray(array $data): self
     {
         return new self(
-            nome: $data['nome'],
-            tipo: $data['tipo'] ?? null,
+            nome:     $data['nome'],
+            tipo:     $data['tipo'] ?? null,
+            cpfCnpj:  $data['cpf_cnpj'] ?? null,
+            telefone: $data['telefone'] ?? null,
             status: filter_var($data['status'] ?? true, FILTER_VALIDATE_BOOLEAN)
         );
     }

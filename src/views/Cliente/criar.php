@@ -38,6 +38,23 @@
                     </select>
                     <?= old_error('tipo') ?>
                 </div>
+                <div>
+                    <label for="cpf_cnpj" class="block text-sm font-medium text-slate-700">CPF / CNPJ</label>
+                    <input type="text" id="cpf_cnpj" name="cpf_cnpj" maxlength="18"
+                        value="<?= htmlspecialchars((string) old('cpf_cnpj')) ?>"
+                        placeholder="Apenas números"
+                        class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100">
+                    <?= old_error('cpf_cnpj') ?>
+                </div>
+
+                <div>
+                    <label for="telefone" class="block text-sm font-medium text-slate-700">Telefone</label>
+                    <input type="text" id="telefone" name="telefone" maxlength="15"
+                        value="<?= htmlspecialchars((string) old('telefone')) ?>"
+                        placeholder="DDD + número"
+                        class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100">
+                    <?= old_error('telefone') ?>
+                </div>
             </div>
 
             <div class="mt-6 flex justify-end gap-3">

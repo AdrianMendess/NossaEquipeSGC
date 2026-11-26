@@ -13,23 +13,25 @@ class ClienteRequest extends Request
     {
         return [
             'id'        => ['nullable', 'string'],
-            'nome'    => ['required', 'string', 'min:3', 'max:150'],
-            'tipo' => ['nullable', 'string', 'max:500'],
+            'nome'      => ['required', 'string', 'min:3', 'max:150'],
+            'tipo'      => ['nullable', 'string', 'max:500'],
+            'cpf_cnpj'  => ['nullable', 'string', 'max:18'], 
+            'telefone'  => ['nullable', 'string', 'max:15'], 
             'version'   => ['nullable', 'integer'],
-            'status' => ['nullable', 'integer', 'in:0,1'],        ];
+            'status'    => ['nullable', 'integer', 'in:0,1'],        ];
     }
 
     public function messages(): array
     {
         return [
-            'nome.required' => 'O título é obrigatório.',
-            'nome.string'   => 'O título deve ser um texto.',
-            'nome.min'      => 'O título deve ter pelo menos 3 caracteres.',
-            'nome.max'      => 'O título não pode exceder 150 caracteres.',
-            'tipo.max'   => 'A descrição não pode exceder 500 caracteres.',
+            'nome.required'   => 'O título é obrigatório.',
+            'nome.string'     => 'O título deve ser um texto.',
+            'nome.min'        => 'O título deve ter pelo menos 3 caracteres.',
+            'nome.max'        => 'O título não pode exceder 150 caracteres.',
+            'tipo.max'        => 'A descrição não pode exceder 500 caracteres.',
 
             'status.required' => 'O campo status é obrigatório.',
-            'status.in' => 'O campo status deve ser "ativo" ou "inativo".',
+            'status.in'       => 'O campo status deve ser "ativo" ou "inativo".',
         ];
     }
 }

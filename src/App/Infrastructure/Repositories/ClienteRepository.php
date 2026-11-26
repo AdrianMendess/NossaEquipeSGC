@@ -22,13 +22,15 @@ class ClienteRepository implements IClienteRepository
 
     public function create(Cliente $cliente): Cliente
     {
-        $sql = 'INSERT INTO tb_cliente (id, nome, tipo, status, created_at, updated_at)
-                VALUES (:id, :nome, :tipo, :status, :created_at, :updated_at)';
+        $sql = 'INSERT INTO tb_cliente (id, nome, tipo, cpf_cnpj, telefone status, created_at, updated_at)
+                VALUES (:id, :nome, :tipo, :cpf_cnpj, :telefone, :status, :created_at, :updated_at)';
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':id', $cliente->getId(), PDO::PARAM_STR);
-        $stmt->bindValue(':nome', $cliente->getNome());
-        $stmt->bindValue(':tipo', $cliente->getTipo());
-        $stmt->bindValue(':status', $cliente->getStatus(), PDO::PARAM_BOOL);
+        $stmt->bindValue(':id',         $cliente->getId(), PDO::PARAM_STR);
+        $stmt->bindValue(':nome',       $cliente->getNome());
+        $stmt->bindValue(':tipo',       $cliente->getTipo());
+        $stmt->bindValue(':cpf_cnpj',   $cliente->getCpfCnpj());
+        $stmt->bindValue(':telefone',   $cliente->getTelefone());
+        $stmt->bindValue(':status',     $cliente->getStatus(), PDO::PARAM_BOOL);
         $stmt->bindValue(':created_at', $cliente->getCreatedAt());
         $stmt->bindValue(':updated_at', $cliente->getUpdatedAt());
         $stmt->execute();
@@ -39,15 +41,17 @@ class ClienteRepository implements IClienteRepository
     public function update(Cliente $cliente): Cliente
     {
         $sql = 'UPDATE tb_cliente
-                SET nome = :nome, tipo = :tipo,
+                SET nome = :nome, tipo = :tipo, cpf_cnpj = :cpf_cnpj, telefone = :telefone, 
                     status = :status, updated_at = :updated_at, version = version + 1
                 WHERE id = :id AND version = :expectedVersion';
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':nome', $cliente->getNome());
-        $stmt->bindValue(':tipo', $cliente->getTipo());
-        $stmt->bindValue(':status', $cliente->getStatus(), PDO::PARAM_BOOL);
+        $stmt->bindValue(':nome',     $cliente->getNome());
+        $stmt->bindValue(':tipo',     $cliente->getTipo());
+        $stmt->bindValue(':cpf_cnpj', $cliente->getCpfCnpj());
+        $stmt->bindValue(':telefone', $cliente->getTelefone());
+        $stmt->bindValue(':status',   $cliente->getStatus(), PDO::PARAM_BOOL);
         $stmt->bindValue(':updated_at', $cliente->getUpdatedAt());
-        $stmt->bindValue(':id', $cliente->getId(), PDO::PARAM_STR);
+        $stmt->bindValue(':id',       $cliente->getId(), PDO::PARAM_STR);
         $stmt->bindValue(':expectedVersion', $cliente->getVersion(), PDO::PARAM_INT);
         $stmt->execute();
 
@@ -60,7 +64,7 @@ class ClienteRepository implements IClienteRepository
 
     public function getAll(?string $tipo = null, ?string $status = null): array
 {
-    $sql = 'SELECT id, nome, tipo, status, version FROM tb_cliente';
+    $sql = 'SELECT id, nome, tipo, cpf_cnpj, telefone, status, version FROM tb_cliente';
     $conditions = [];
     $params = [];
 
@@ -88,6 +92,8 @@ class ClienteRepository implements IClienteRepository
         $itens[] = new Cliente(
             nome: $row['nome'],
             tipo: $row['tipo'],
+            cpfCnpj: $row['cpf_cnpj'],
+            telefone: $row['telefone'],
             status: (bool) $row['status'],
             created_at: null,
             updated_at: null,
@@ -111,6 +117,8 @@ class ClienteRepository implements IClienteRepository
             return new Cliente(
                 nome: $row['nome'],
                 tipo: $row['tipo'],
+                cpfCnpj: $row['cpf_cnpj'],
+                telefone: $row['telefone'],
                 status: (bool) $row['status'],
                 created_at: $row['created_at'],
                 updated_at: $row['updated_at'],

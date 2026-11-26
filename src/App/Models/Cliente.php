@@ -9,18 +9,22 @@ use Ramsey\Uuid\Uuid;
 // TODO: renomeie esta classe e seus campos para o seu domínio
 class Cliente
 {
-    private string $id;
-    private string $nome;
+    private string  $id;
+    private string  $nome;
     private ?string $tipo;
-    private ?bool $status;
+    private ?string $cpfCnpj;
+    private ?string $telefone;
+    private ?bool   $status;
     private ?string $created_at;
     private ?string $updated_at;
     private int $version = 1;
 
     public function __construct(
-        string $nome,
+        string  $nome,
         ?string $tipo = null,
-        ?bool $status = null,
+        ?string $cpfCnpj = null,
+        ?string $telefone = null,
+        ?bool   $status = null,
         ?string $created_at = null,
         ?string $updated_at = null,
         ?string $id = null,
@@ -29,6 +33,8 @@ class Cliente
         $this->setId($id);
         $this->nome = $nome;
         $this->tipo = $tipo;
+        $this->cpfCnpj = $cpfCnpj;
+        $this->telefone = $telefone;
         $this->status = $status;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
@@ -40,6 +46,8 @@ class Cliente
         return new self(
             nome: $data['nome'],
             tipo: $data['tipo'] ?? null,
+            cpfCnpj: $data['cpfCnpj'] ?? null,
+            telefone: $data['telefone'] ?? null,
             status: $data['status'] ?? null,
             created_at: $data['created_at'] ?? null,
             updated_at: $data['updated_at'] ?? null,
@@ -76,6 +84,26 @@ class Cliente
     public function setTipo(?string $tipo): void
     {
         $this->tipo = $tipo;
+    }
+    
+    public function getCpfCnpj(): ?string
+    {
+        return $this->cpfCnpj;
+    }
+
+    public function setCpfCnpj(?string $cpfCnpj): void
+    {
+        $this->cpfCnpj = $cpfCnpj;
+    }
+
+    public function getTelefone(): ?string
+    {
+        return $this->telefone;
+    }
+
+    public function setTelefone(?string $telefone): void
+    {
+        $this->telefone = $telefone;
     }
 
     public function getStatus(): ?bool
