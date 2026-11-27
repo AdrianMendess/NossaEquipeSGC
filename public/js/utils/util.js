@@ -149,6 +149,25 @@ export function validateVersaoLinguagem(campo, mensagem) {
   return validateVersion(campo, mensagem);
 }
 
+export function validateCpfCnpj(campo, mensagem = "CPF (11 digitos) ou CNPJ (14 digitos) inválido") {
+  const digit = campo.value.replace(/\D/g, '');
+  if (digit.length > 0 && digit.length !== 11 && digit.length !== 14) {
+    showFieldErros(campo, mensagens);
+    return false;
+  }
+  hideFieldErros(campo);
+  return true;
+}
+
+export function validateTelefone(campo,mensagens = "Telefone inválido (10 ou 11 dígitos") {
+  const digit = campo.value.replace(/\D/g, '');
+  if (digit.length > 0 && digit.length !== 10 && digit.legth !== 11) {
+    showFieldErros(campo, mensagens);
+  return false
+  }
+  hideFieldErros(campo);
+  return true;
+}
 // ============================================
 // MÁSCARAS DE INPUT (restringe caracteres)
 // ============================================
@@ -167,6 +186,36 @@ export function maskNumber(campo) {
   campo.value = campo.value.replace(/[^0-9]/g, '');
 }
 
+export function maskCpfCnpj(campo) {
+  let v = campo.value.replace(/\D/g, '').slice(0,14);
+
+  if (v.length <= 11) {
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+  } else {
+    v = v.replace(/^(\d{2})(\d)/, '$1.$2');
+    v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+    v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
+    v = v.replace(/(\d{4})(\d)/, '$1-$2');
+  }
+
+  campo.value = v;
+}
+
+export function maskTelefone(campo) {
+  let v = campo.value.replace(/\D/g, '').slice(0, 11);
+
+  if (v.length <= 10) {
+    v = v.replace(/^(\d{2})(\d)/g, '($1) $2');
+    v = v.replace(/(\d{4})(\d)/, '$1-$2');
+  } else {
+    v = v.replace(/^(\d{2})(\d)/g, '($1) $2');
+    v = v.replace(/(\d{5})(\d)/, '$1-$2');
+  }
+
+  campo.value = v;
+}
 
 export function applyMask(campo, tipo) {
   if (!campo) return;
@@ -182,6 +231,12 @@ export function applyMask(campo, tipo) {
       case 'number':
         maskNumber(campo);
         break;
+        case 'cpf_cnpj':
+          maskCpfCnpj(campo);
+          break;
+          case 'telefone':
+            maskTelefone(campo);
+            break;
     }
   });
 }

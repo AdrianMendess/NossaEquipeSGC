@@ -84,4 +84,5 @@ $statusAtual = ($item && $item->getStatus()) ? '1' : '0';
             </div>
         </form>
     </div>
+    <script type="module" src="<?= \Src\App\Utils\Url::base() ?>/js/cliente/form.js"></script>
 </div>
